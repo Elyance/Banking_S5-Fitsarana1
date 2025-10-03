@@ -20,6 +20,10 @@ public class StatutClient {
     @Column(name = "description")
     private String description;
 
+    // Constructeur par défaut requis par JPA/Hibernate
+    public StatutClient() {
+    }
+
     public StatutClient(String libelle, String description) {
         this.libelle = libelle;
         this.description = description;

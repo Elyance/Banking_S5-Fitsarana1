@@ -161,12 +161,37 @@
         </div>
 
         <div style="margin: 30px 0;">
-            <a href="clients/register.jsp" class="btn">
-                👥 Enregistrer un client
+            <a href="clients/register" class="btn">
+                ➕ Enregistrer un Client
             </a>
-            <a href="#" class="btn btn-secondary" onclick="window.open('/centralisateur-app/api/clients/1', '_blank')">
-                🔍 Tester API
+            <a href="clients/list" class="btn">
+                � Liste des Clients
             </a>
+        </div>
+
+        <div class="api-info">
+            <h3>🔗 Routes disponibles</h3>
+            <div class="endpoint">
+                <span class="method get">GET</span> /clients/register - Formulaire d'enregistrement
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span> /clients/register - Traitement enregistrement
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /clients/list - Liste des clients
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span> /clients/list - Filtrer les clients
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /clients/details?id={id} - Détails d'un client
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /clients/edit?id={id} - Formulaire de modification
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span> /clients/edit - Traitement modification
+            </div>
         </div>
 
     </div>

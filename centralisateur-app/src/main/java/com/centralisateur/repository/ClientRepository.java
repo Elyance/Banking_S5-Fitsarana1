@@ -50,6 +50,20 @@ public class ClientRepository {
     }
 
     /**
+     * Recherche un client par son numéro client
+     */
+    public Client findByNumeroClient(String numeroClient) {
+        TypedQuery<Client> query = em.createQuery(
+            "SELECT c FROM Client c WHERE c.numeroClient = :numeroClient", 
+            Client.class
+        );
+        query.setParameter("numeroClient", numeroClient);
+        
+        List<Client> results = query.getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
+
+    /**
      * Recherche des clients par nom (contient)
      */
     public List<Client> findByNomContaining(String nom) {
@@ -122,6 +136,13 @@ public class ClientRepository {
      */
     public boolean existsByEmail(String email) {
         return findByEmail(email) != null;
+    }
+
+    /**
+     * Vérifie si un numéro client existe déjà
+     */
+    public boolean existsByNumeroClient(String numeroClient) {
+        return findByNumeroClient(numeroClient) != null;
     }
 
     /**

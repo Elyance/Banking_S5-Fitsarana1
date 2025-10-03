@@ -197,6 +197,17 @@
                 <span class="info-label">ID Client:</span>
                 <span class="info-value"><%= client.getId() %></span>
             </div>
+
+            <div class="info-item">
+                <span class="info-label">N° Client:</span>
+                <span class="info-value">
+                    <% if (client.getNumeroClient() != null) { %>
+                        <strong style="color: #667eea;"><%= client.getNumeroClient() %></strong>
+                    <% } else { %>
+                        <span style="color: #999;">Non assigné</span>
+                    <% } %>
+                </span>
+            </div>
             
             <div class="info-item">
                 <span class="info-label">Nom complet:</span>

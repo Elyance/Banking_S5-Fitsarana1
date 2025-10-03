@@ -25,6 +25,9 @@ public class Client {
     @Column(name = "email", length = 255, unique = true, nullable = false)
     private String email;
 
+    @Column(name = "numero_client", length = 20, unique = true)
+    private String numeroClient;
+
     @Column(name = "telephone", length = 20)
     private String telephone;
 
@@ -95,6 +98,14 @@ public class Client {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getNumeroClient() {
+        return numeroClient;
+    }
+
+    public void setNumeroClient(String numeroClient) {
+        this.numeroClient = numeroClient;
     }
 
     public String getTelephone() {
@@ -173,6 +184,7 @@ public class Client {
     public String toString() {
         return "Client{" +
                 "id=" + id +
+                ", numeroClient='" + numeroClient + '\'' +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
                 ", email='" + email + '\'' +
