@@ -18,7 +18,7 @@
 
 
     <build>
-        <finalName>Compte_courant</finalName>
+        <finalName>centralisateur-app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -52,6 +52,20 @@
             <artifactId>jakarta.jakartaee-api</artifactId>
             <version>9.1.0</version>
             <scope>provided</scope>
+        </dependency>
+        
+        <!-- JSTL pour Tomcat - implémentation complète -->
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        
+        <!-- API JSTL pour Tomcat -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>2.0.0</version>
         </dependency>
     </dependencies>
 
