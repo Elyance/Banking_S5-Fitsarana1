@@ -1,3 +1,31 @@
+creation du pom.xml
+
+
+configuration anle base (database,table)
+-- creation de module postgres (raha mbola tsisy)
+
+
+configuration de datasource
+    - miditra ao am cli ./jboss-cli.sh --connect
+    - on insere ca : 
+            /subsystem=datasources/data-source=BanqueCentralisateur:add(\
+jndi-name=java:jboss/datasources/BanqueCentralisateur,\
+driver-name=postgresql,\
+connection-url=jdbc:postgresql://localhost:5432/centralisateur_db,\
+user-name=postgres,\
+password=postgres,\
+min-pool-size=5,\
+max-pool-size=20,\
+pool-prefill=true,\
+transaction-isolation=TRANSACTION_READ_COMMITTED,\
+check-valid-connection-sql="SELECT 1")
+    
+    - on enable la datasource : /subsystem=datasources/data-source=BanqueCentralisateur:enable
+    - on teste la connexion : /subsystem=datasources/data-source=BanqueCentralisateur:test-connection-in-pool
+
+
+
+creation de persistence.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://jakarta.ee/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
