@@ -3,6 +3,7 @@ com/compteCourant/entity/Transaction.class
 com/compteCourant/repository/CompteCourantRepository.class
 com/compteCourant/entity/StatutCompteCourantMvt.class
 com/compteCourant/repository/StatutCompteRepository.class
+com/compteCourant/interfaceRemote/CompteCourantServiceRemote.class
 com/compteCourant/repository/TypeOperationRepository.class
 com/compteCourant/entity/StatutCompte.class
 com/compteCourant/entity/Client.class

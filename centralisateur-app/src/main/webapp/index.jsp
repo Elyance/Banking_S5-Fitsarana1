@@ -165,7 +165,13 @@
                 ➕ Enregistrer un Client
             </a>
             <a href="clients/list" class="btn">
-                � Liste des Clients
+                👥 Liste des Clients
+            </a>
+            <a href="compte-courant/creer" class="btn">
+                🏦 Créer un Compte Courant
+            </a>
+            <a href="compte-courant/liste" class="btn">
+                📋 Liste des Comptes
             </a>
         </div>
 
@@ -191,6 +197,18 @@
             </div>
             <div class="endpoint">
                 <span class="method post">POST</span> /clients/edit - Traitement modification
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /compte-courant/creer - Formulaire création compte
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span> /compte-courant/creer - Traitement création
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /compte-courant/liste - Liste des comptes courants
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /test-compte-courant - Test d'intégration
             </div>
         </div>
 
