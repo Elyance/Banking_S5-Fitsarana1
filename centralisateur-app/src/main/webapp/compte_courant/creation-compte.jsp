@@ -129,7 +129,7 @@
 
                             <!-- Boutons d'action -->
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="${pageContext.request.contextPath}/client/list" 
+                                <a href="${pageContext.request.contextPath}/clients/list" 
                                    class="btn btn-secondary me-md-2">
                                     <i class="fas fa-arrow-left me-1"></i>
                                     Retour aux clients
