@@ -6,9 +6,7 @@ com/compteCourant/repository/StatutCompteRepository.class
 com/compteCourant/interfaceRemote/CompteCourantServiceRemote.class
 com/compteCourant/repository/TypeOperationRepository.class
 com/compteCourant/entity/StatutCompte.class
-com/compteCourant/entity/Client.class
 com/compteCourant/service/CompteCourantService.class
 com/compteCourant/repository/TransactionRepository.class
 com/compteCourant/entity/TypeOperation.class
 com/compteCourant/repository/StatutCompteCourantMvtRepository.class
-com/compteCourant/repository/ClientRepository.class

@@ -8,8 +8,8 @@
     <!-- Configuration pour WildFly avec JTA -->
     <persistence-unit name="CompteCourantPU" transaction-type="JTA">
         
-        <!-- DataSource JNDI pour WildFly -->
-        <jta-data-source>java:jboss/datasources/BanqueCC</jta-data-source>
+        <!-- DataSource JNDI pour WildFly - Utilise la même base que le centralisateur -->
+        <jta-data-source>java:jboss/datasources/BanqueCentralisateur</jta-data-source>
 
         <!-- Entités du domaine -->
         <class>com.compteCourant.entity.StatutCompte</class>
@@ -17,7 +17,6 @@
         <class>com.compteCourant.entity.CompteCourant</class>
         <class>com.compteCourant.entity.Transaction</class>
         <class>com.compteCourant.entity.StatutCompteCourantMvt</class>
-        <class>com.compteCourant.entity.Client</class>
 
         <!-- Propriétés Hibernate pour WildFly -->
         <properties>

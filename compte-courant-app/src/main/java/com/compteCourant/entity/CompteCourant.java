@@ -22,11 +22,6 @@ public class CompteCourant {
     @Column(name = "client_id", nullable = false)
     private Long clientId;
 
-    // Relation JPA avec Client
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id", insertable = false, updatable = false)
-    private Client client;
-
     @Column(name = "solde", precision = 15, scale = 2, nullable = false)
     private BigDecimal solde;
 
@@ -83,17 +78,6 @@ public class CompteCourant {
 
     public void setClientId(Long clientId) {
         this.clientId = clientId;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-        if (client != null) {
-            this.clientId = client.getId();
-        }
     }
 
     public BigDecimal getSolde() {
