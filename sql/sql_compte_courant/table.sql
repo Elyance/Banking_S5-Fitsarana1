@@ -16,17 +16,13 @@ CREATE DATABASE compte_courant_db;
 CREATE TABLE IF NOT EXISTS statut_compte (
     id BIGSERIAL PRIMARY KEY,
     libelle VARCHAR(50) UNIQUE NOT NULL,
-    description TEXT,
-    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    description TEXT
 );
 
 CREATE TABLE IF NOT EXISTS type_operation (
     id BIGSERIAL PRIMARY KEY,
-    code VARCHAR(20) UNIQUE NOT NULL,
     libelle VARCHAR(100) NOT NULL,
-    description TEXT,
-    frais DECIMAL(10,2) DEFAULT 0.00,
-    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    description TEXT
 );
 
 -- =====================================================

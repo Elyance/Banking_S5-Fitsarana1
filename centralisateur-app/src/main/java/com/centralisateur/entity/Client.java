@@ -3,6 +3,7 @@ package com.centralisateur.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Entité représentant un client de la banque
@@ -46,13 +47,9 @@ public class Client {
     @Column(name = "date_modification")
     private LocalDateTime dateModification;
 
-    @Column(name = "statut_client_id", nullable = false)
-    private Long statutClientId;
-
-    // Relation JPA avec StatutClient
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "statut_client_id", insertable = false, updatable = false)
-    private StatutClient statutClient;
+    // Relations JPA 
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<MvtClient> mouvementsStatut;
 
     // Constructeurs
     public Client() {
@@ -156,23 +153,12 @@ public class Client {
         this.dateModification = dateModification;
     }
 
-    public Long getStatutClientId() {
-        return statutClientId;
+    public List<MvtClient> getMouvementsStatut() {
+        return mouvementsStatut;
     }
 
-    public void setStatutClientId(Long statutClientId) {
-        this.statutClientId = statutClientId;
-    }
-
-    public StatutClient getStatutClient() {
-        return statutClient;
-    }
-
-    public void setStatutClient(StatutClient statutClient) {
-        this.statutClient = statutClient;
-        if (statutClient != null) {
-            this.statutClientId = statutClient.getId();
-        }
+    public void setMouvementsStatut(List<MvtClient> mouvementsStatut) {
+        this.mouvementsStatut = mouvementsStatut;
     }
 
     // Méthodes utilitaires

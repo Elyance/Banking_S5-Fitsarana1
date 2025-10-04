@@ -17,8 +17,7 @@ CREATE DATABASE centralisateur_db;
 CREATE TABLE IF NOT EXISTS statut_client (
     id BIGSERIAL PRIMARY KEY,
     libelle VARCHAR(50) UNIQUE NOT NULL,
-    description TEXT,
-    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    description TEXT
 );
 
 -- =====================================================

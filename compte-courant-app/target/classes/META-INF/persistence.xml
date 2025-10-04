@@ -8,8 +8,7 @@
     <!-- Configuration pour WildFly avec JTA -->
     <persistence-unit name="CompteCourantPU" transaction-type="JTA">
         
-        <!-- DataSource JNDI pour WildFly - Utilise la même base que le centralisateur -->
-        <jta-data-source>java:jboss/datasources/BanqueCentralisateur</jta-data-source>
+        <jta-data-source>java:jboss/datasources/BanqueCC</jta-data-source>
 
         <!-- Entités du domaine -->
         <class>com.compteCourant.entity.StatutCompte</class>
@@ -23,8 +22,12 @@
             <!-- Dialect PostgreSQL -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             
-            <!-- Stratégie de génération du schéma -->
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <!-- Stratégie de génération du schéma - validation seulement -->
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            
+            <!-- Désactiver la génération des contraintes de clé étrangère -->
+            <property name="hibernate.hbm2ddl.create_namespaces" value="false"/>
+            <property name="hibernate.hbm2ddl.halt_on_error" value="false"/>
             
             <!-- Affichage des requêtes SQL -->
             <property name="hibernate.show_sql" value="true"/>

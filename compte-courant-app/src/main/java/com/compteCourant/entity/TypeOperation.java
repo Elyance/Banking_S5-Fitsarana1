@@ -1,8 +1,6 @@
 package com.compteCourant.entity;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
  * Entité représentant un type d'opération bancaire
@@ -16,31 +14,23 @@ public class TypeOperation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "code", length = 20, unique = true, nullable = false)
-    private String code;
-
     @Column(name = "libelle", length = 100, nullable = false)
     private String libelle;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "frais", precision = 10, scale = 2)
-    private BigDecimal frais;
-
-    @Column(name = "date_creation", nullable = false)
-    private LocalDateTime dateCreation;
-
     // Constructeurs
     public TypeOperation() {
-        this.dateCreation = LocalDateTime.now();
-        this.frais = BigDecimal.ZERO;
     }
 
-    public TypeOperation(String code, String libelle) {
-        this();
-        this.code = code;
+    public TypeOperation(String libelle) {
         this.libelle = libelle;
+    }
+
+    public TypeOperation(String libelle, String description) {
+        this.libelle = libelle;
+        this.description = description;
     }
 
     // Getters et Setters
@@ -50,14 +40,6 @@ public class TypeOperation {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getLibelle() {
@@ -76,29 +58,12 @@ public class TypeOperation {
         this.description = description;
     }
 
-    public BigDecimal getFrais() {
-        return frais;
-    }
-
-    public void setFrais(BigDecimal frais) {
-        this.frais = frais;
-    }
-
-    public LocalDateTime getDateCreation() {
-        return dateCreation;
-    }
-
-    public void setDateCreation(LocalDateTime dateCreation) {
-        this.dateCreation = dateCreation;
-    }
-
     @Override
     public String toString() {
         return "TypeOperation{" +
                 "id=" + id +
-                ", code='" + code + '\'' +
                 ", libelle='" + libelle + '\'' +
-                ", frais=" + frais +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

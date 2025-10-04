@@ -63,6 +63,13 @@ public class MvtClientRepository {
     }
 
     /**
+     * Récupère le dernier mouvement d'un client (compatible avec Spring Data naming)
+     */
+    public MvtClient findTopByClientIdOrderByDateMvtDesc(Long clientId) {
+        return findLastByClientId(clientId);
+    }
+
+    /**
      * Récupère tous les mouvements pour un statut donné
      */
     public List<MvtClient> findByStatutClientId(Long statutClientId) {

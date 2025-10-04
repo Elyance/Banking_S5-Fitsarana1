@@ -11,9 +11,9 @@ INSERT INTO statut_compte (libelle, description) VALUES
 -- INSERTION DES TYPES D'OPÉRATION
 -- =====================================================
 
-INSERT INTO type_operation (code, libelle, description, frais) VALUES 
-('DEPOT', 'Dépôt despèces', 'Versement d argent sur le compte', 0.00),
-('RETRAIT', 'Retrait despèces', 'Retrait d argent du compte', 0.00);
+INSERT INTO type_operation (libelle, description) VALUES 
+('DEPOT', 'Versement d argent sur le compte'),
+('RETRAIT', 'Retrait d argent du compte');
 
 -- =====================================================
 -- VÉRIFICATION DES DONNÉES INSÉRÉES

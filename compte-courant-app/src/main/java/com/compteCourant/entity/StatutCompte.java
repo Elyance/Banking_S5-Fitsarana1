@@ -1,7 +1,6 @@
 package com.compteCourant.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * Entité représentant un statut de compte courant
@@ -21,16 +20,11 @@ public class StatutCompte {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "date_creation", nullable = false)
-    private LocalDateTime dateCreation;
-
     // Constructeurs
     public StatutCompte() {
-        this.dateCreation = LocalDateTime.now();
     }
 
     public StatutCompte(String libelle, String description) {
-        this();
         this.libelle = libelle;
         this.description = description;
     }
@@ -58,14 +52,6 @@ public class StatutCompte {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public LocalDateTime getDateCreation() {
-        return dateCreation;
-    }
-
-    public void setDateCreation(LocalDateTime dateCreation) {
-        this.dateCreation = dateCreation;
     }
 
     @Override

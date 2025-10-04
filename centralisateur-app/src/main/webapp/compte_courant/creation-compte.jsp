@@ -142,51 +142,6 @@
                         </form>
                     </div>
                 </div>
-
-                <!-- Affichage du compte créé (si succès) -->
-                <c:if test="${not empty compteCreé}">
-                    <div class="card shadow mt-4">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0">
-                                <i class="fas fa-check-circle me-2"></i>
-                                Compte créé avec succès
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <strong>Numéro de compte :</strong> ${compteCreé.numeroCompte}
-                                </div>
-                                <div class="col-md-6">
-                                    <strong>Client ID :</strong> ${compteCreé.clientId}
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <strong>Solde initial :</strong> 
-                                    <fmt:formatNumber value="${compteCreé.solde}" type="currency" currencySymbol="€"/>
-                                </div>
-                                <div class="col-md-6">
-                                    <strong>Découvert autorisé :</strong> 
-                                    <fmt:formatNumber value="${compteCreé.decouvertAutorise}" type="currency" currencySymbol="€"/>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-12">
-                                    <strong>Date de création :</strong> 
-                                    <fmt:formatDate value="${compteCreé.dateCreation}" pattern="dd/MM/yyyy HH:mm:ss"/>
-                                </div>
-                            </div>
-                            <div class="mt-3">
-                                <a href="${pageContext.request.contextPath}/compte-courant/details?id=${compteCreé.id}" 
-                                   class="btn btn-info">
-                                    <i class="fas fa-eye me-1"></i>
-                                    Voir les détails du compte
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </c:if>
             </div>
         </div>
     </div>

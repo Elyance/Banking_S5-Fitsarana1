@@ -7,6 +7,8 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * Service d'intégration avec le module compte-courant

@@ -66,9 +66,6 @@ public class ClientService {
             throw new IllegalStateException("Le statut ACTIF n'existe pas dans la base de données");
         }
 
-        // Assigner le statut ACTIF au client
-        client.setStatutClientId(statutActif.getId());
-
         // Générer le numéro client avant la sauvegarde
         String numeroClient = generateNumeroClient();
         client.setNumeroClient(numeroClient);
@@ -88,8 +85,8 @@ public class ClientService {
         MvtClient mvtClient = new MvtClient();
         mvtClient.setClientId(clientSauvegarde.getId());
         mvtClient.setStatutClientId(statutActif.getId());
-        mvtClient.setDateMouvement(LocalDateTime.now());
-        mvtClient.setMotif("Création du client");
+        mvtClient.setDateMvt(LocalDateTime.now());
+        mvtClient.setDescription("Création du client");
 
         mvtClientRepository.save(mvtClient);
 
@@ -106,8 +103,14 @@ public class ClientService {
             throw new IllegalArgumentException("Client non trouvé avec l'ID: " + clientId);
         }
 
-        // Récupérer le statut via l'ID du statut
-        StatutClient statut = statutClientRepository.findById(client.getStatutClientId());
+        // Récupérer le dernier mouvement de statut pour ce client
+        MvtClient dernierMouvement = mvtClientRepository.findTopByClientIdOrderByDateMvtDesc(clientId);
+        if (dernierMouvement == null) {
+            throw new IllegalStateException("Aucun statut trouvé pour le client ID: " + clientId);
+        }
+
+        // Récupérer le statut via l'ID du statut du dernier mouvement
+        StatutClient statut = statutClientRepository.findById(dernierMouvement.getStatutClientId());
         if (statut == null) {
             throw new IllegalStateException("Statut client non trouvé pour le client ID: " + clientId);
         }
@@ -247,20 +250,34 @@ public class ClientService {
 
         // Conserver les données système importantes du client existant
         client.setDateCreation(clientExistant.getDateCreation());
-        client.setStatutClientId(clientExistant.getStatutClientId());
         client.setNumeroClient(clientExistant.getNumeroClient()); // Conserver le numéro client existant
 
         // Sauvegarder les modifications
         Client clientMisAJour = clientRepository.save(client);
 
-        // Créer un mouvement pour tracer la modification
-        MvtClient mvtClient = new MvtClient();
-        mvtClient.setClientId(clientMisAJour.getId());
-        mvtClient.setStatutClientId(clientMisAJour.getStatutClientId());
-        mvtClient.setDateMouvement(java.time.LocalDateTime.now());
-        mvtClient.setMotif("Modification des informations du client");
+        // Récupérer le statut actuel via les mouvements
+        MvtClient dernierMouvement = mvtClientRepository.findTopByClientIdOrderByDateMvtDesc(clientMisAJour.getId());
+        Long statutClientId = null;
+        if (dernierMouvement != null) {
+            statutClientId = dernierMouvement.getStatutClientId();
+        } else {
+            // Si aucun mouvement trouvé, utiliser le statut ACTIF par défaut
+            StatutClient statutActif = statutClientRepository.findByLibelle("ACTIF");
+            if (statutActif != null) {
+                statutClientId = statutActif.getId();
+            }
+        }
 
-        mvtClientRepository.save(mvtClient);
+        // Créer un mouvement pour tracer la modification
+        if (statutClientId != null) {
+            MvtClient mvtClient = new MvtClient();
+            mvtClient.setClientId(clientMisAJour.getId());
+            mvtClient.setStatutClientId(statutClientId);
+            mvtClient.setDateMvt(java.time.LocalDateTime.now());
+            mvtClient.setDescription("Modification des informations du client");
+
+            mvtClientRepository.save(mvtClient);
+        }
 
         return clientMisAJour;
     }
