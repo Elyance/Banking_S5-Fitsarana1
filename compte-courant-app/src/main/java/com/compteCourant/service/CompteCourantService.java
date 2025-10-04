@@ -10,7 +10,9 @@ import com.compteCourant.repository.StatutCompteRepository;
 import com.compteCourant.repository.StatutCompteCourantMvtRepository;
 import com.compteCourant.repository.TransactionRepository;
 import com.compteCourant.repository.TypeOperationRepository;
+import com.compteCourant.interfaceRemote.CompteCourantServiceRemote;
 
+import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -22,7 +24,8 @@ import java.util.List;
  * Service pour la gestion des opérations sur les comptes courants
  */
 @Stateless
-public class CompteCourantService {
+@Remote(CompteCourantServiceRemote.class)
+public class CompteCourantService implements CompteCourantServiceRemote {
 
     @Inject
     private CompteCourantRepository compteCourantRepository;
@@ -378,4 +381,5 @@ public class CompteCourantService {
         }
         return false;
     }
+   
 }
