@@ -15,7 +15,7 @@ import java.util.List;
 @ApplicationScoped
 public class ClientRepository {
 
-    @PersistenceContext(unitName = "CentralisateurPU", type = PersistenceContextType.TRANSACTION)
+    @PersistenceContext(unitName = "CompteCourantPU", type = PersistenceContextType.TRANSACTION)
     private EntityManager em;
 
     /**
