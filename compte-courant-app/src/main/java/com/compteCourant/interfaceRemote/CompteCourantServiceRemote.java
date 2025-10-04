@@ -68,4 +68,34 @@ public interface CompteCourantServiceRemote {
      */
     List<CompteCourant> getComptesParClient(Long clientId);
     
+    /**
+     * Vérifie si un compte peut effectuer un retrait
+     */
+    boolean peutRetirerMontant(Long compteId, BigDecimal montant);
+    
+    /**
+     * Calcule le solde disponible d'un compte (solde + découvert autorisé)
+     */
+    BigDecimal getSoldeDisponible(Long compteId);
+    
+    /**
+     * Vérifie si un compte est en découvert
+     */
+    boolean estEnDecouvert(Long compteId);
+    
+    /**
+     * Met à jour le découvert autorisé d'un compte
+     */
+    CompteCourant modifierDecouvertAutorise(Long compteId, BigDecimal nouveauDecouvert);
+    
+    /**
+     * Compte le nombre total de comptes
+     */
+    long getNombreTotalComptes();
+    
+    /**
+     * Compte le nombre de transactions d'un compte
+     */
+    long getNombreTransactions(Long compteId);
+    
 }

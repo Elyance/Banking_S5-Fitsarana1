@@ -1,5 +1,7 @@
 package com.compteCourant.interfaceRemote;
 
+import com.compteCourant.entity.CompteCourant;
+import com.compteCourant.entity.Transaction;
 import jakarta.ejb.Remote;
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,7 +16,7 @@ public interface CompteCourantServiceRemote {
     /**
      * Crée un nouveau compte courant
      */
-    Object creerCompteCourant(String numeroCompte, Long clientId, BigDecimal decouvertAutorise);
+    CompteCourant creerCompteCourant(String numeroCompte, Long clientId, BigDecimal decouvertAutorise);
     
     /**
      * Supprime un compte courant (fermeture par changement de statut)
@@ -24,12 +26,12 @@ public interface CompteCourantServiceRemote {
     /**
      * Effectue un dépôt sur un compte courant
      */
-    Object deposer(Long compteId, BigDecimal montant, String description);
+    Transaction deposer(Long compteId, BigDecimal montant, String description);
     
     /**
      * Effectue un retrait sur un compte courant
      */
-    Object retirer(Long compteId, BigDecimal montant, String description);
+    Transaction retirer(Long compteId, BigDecimal montant, String description);
     
     /**
      * Calcule et retourne le solde d'un compte
@@ -39,30 +41,60 @@ public interface CompteCourantServiceRemote {
     /**
      * Récupère la liste des transactions d'un compte
      */
-    List<?> getTransactionsParCompte(Long compteId);
+    List<Transaction> getTransactionsParCompte(Long compteId);
     
     /**
      * Récupère la liste des transactions d'un compte avec pagination
      */
-    List<?> getTransactionsParCompte(Long compteId, int offset, int limit);
+    List<Transaction> getTransactionsParCompte(Long compteId, int offset, int limit);
     
     /**
      * Récupère la liste de tous les comptes courants
      */
-    List<?> getTousLesComptes();
+    List<CompteCourant> getTousLesComptes();
     
     /**
      * Récupère un compte par son ID
      */
-    Object getCompteParId(Long compteId);
+    CompteCourant getCompteParId(Long compteId);
     
     /**
      * Récupère un compte par son numéro
      */
-    Object getCompteParNumero(String numeroCompte);
+    CompteCourant getCompteParNumero(String numeroCompte);
     
     /**
      * Récupère les comptes d'un client
      */
-    List<?> getComptesParClient(Long clientId);
+    List<CompteCourant> getComptesParClient(Long clientId);
+    
+    /**
+     * Vérifie si un compte peut effectuer un retrait
+     */
+    boolean peutRetirerMontant(Long compteId, BigDecimal montant);
+    
+    /**
+     * Calcule le solde disponible d'un compte (solde + découvert autorisé)
+     */
+    BigDecimal getSoldeDisponible(Long compteId);
+    
+    /**
+     * Vérifie si un compte est en découvert
+     */
+    boolean estEnDecouvert(Long compteId);
+    
+    /**
+     * Met à jour le découvert autorisé d'un compte
+     */
+    CompteCourant modifierDecouvertAutorise(Long compteId, BigDecimal nouveauDecouvert);
+    
+    /**
+     * Compte le nombre total de comptes
+     */
+    long getNombreTotalComptes();
+    
+    /**
+     * Compte le nombre de transactions d'un compte
+     */
+    long getNombreTransactions(Long compteId);
 }

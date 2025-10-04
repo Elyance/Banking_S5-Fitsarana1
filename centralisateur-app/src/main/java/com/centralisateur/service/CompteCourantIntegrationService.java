@@ -1,6 +1,8 @@
 package com.centralisateur.service;
 
-import com.centralisateur.remote.CompteCourantServiceRemote;
+import com.compteCourant.interfaceRemote.CompteCourantServiceRemote;
+import com.compteCourant.entity.CompteCourant;
+import com.compteCourant.entity.Transaction;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
@@ -20,7 +22,7 @@ public class CompteCourantIntegrationService {
     /**
      * Crée un nouveau compte courant pour un client
      */
-    public Object creerCompteCourant(String numeroCompte, Long clientId, BigDecimal decouvertAutorise) {
+    public CompteCourant creerCompteCourant(String numeroCompte, Long clientId, BigDecimal decouvertAutorise) {
         try {
             return compteCourantService.creerCompteCourant(numeroCompte, clientId, decouvertAutorise);
         } catch (Exception e) {
@@ -42,7 +44,7 @@ public class CompteCourantIntegrationService {
     /**
      * Effectue un dépôt sur un compte
      */
-    public Object deposer(Long compteId, BigDecimal montant, String description) {
+    public Transaction deposer(Long compteId, BigDecimal montant, String description) {
         try {
             return compteCourantService.deposer(compteId, montant, description);
         } catch (Exception e) {
@@ -53,7 +55,7 @@ public class CompteCourantIntegrationService {
     /**
      * Effectue un retrait sur un compte
      */
-    public Object retirer(Long compteId, BigDecimal montant, String description) {
+    public Transaction retirer(Long compteId, BigDecimal montant, String description) {
         try {
             return compteCourantService.retirer(compteId, montant, description);
         } catch (Exception e) {
@@ -75,7 +77,7 @@ public class CompteCourantIntegrationService {
     /**
      * Récupère les transactions d'un compte
      */
-    public List<?> getTransactions(Long compteId) {
+    public List<Transaction> getTransactions(Long compteId) {
         try {
             return compteCourantService.getTransactionsParCompte(compteId);
         } catch (Exception e) {
@@ -86,7 +88,7 @@ public class CompteCourantIntegrationService {
     /**
      * Récupère tous les comptes courants
      */
-    public List<?> getTousLesComptes() {
+    public List<CompteCourant> getTousLesComptes() {
         try {
             return compteCourantService.getTousLesComptes();
         } catch (Exception e) {
@@ -97,7 +99,7 @@ public class CompteCourantIntegrationService {
     /**
      * Récupère un compte par son ID
      */
-    public Object getCompteParId(Long compteId) {
+    public CompteCourant getCompteParId(Long compteId) {
         try {
             return compteCourantService.getCompteParId(compteId);
         } catch (Exception e) {
@@ -108,7 +110,7 @@ public class CompteCourantIntegrationService {
     /**
      * Récupère un compte par son numéro
      */
-    public Object getCompteParNumero(String numeroCompte) {
+    public CompteCourant getCompteParNumero(String numeroCompte) {
         try {
             return compteCourantService.getCompteParNumero(numeroCompte);
         } catch (Exception e) {
@@ -119,7 +121,7 @@ public class CompteCourantIntegrationService {
     /**
      * Récupère les comptes d'un client
      */
-    public List<?> getComptesParClient(Long clientId) {
+    public List<CompteCourant> getComptesParClient(Long clientId) {
         try {
             return compteCourantService.getComptesParClient(clientId);
         } catch (Exception e) {
@@ -163,7 +165,7 @@ public class CompteCourantIntegrationService {
     /**
      * Modifie le découvert autorisé d'un compte
      */
-    public Object modifierDecouvertAutorise(Long compteId, BigDecimal nouveauDecouvert) {
+    public CompteCourant modifierDecouvertAutorise(Long compteId, BigDecimal nouveauDecouvert) {
         try {
             return compteCourantService.modifierDecouvertAutorise(compteId, nouveauDecouvert);
         } catch (Exception e) {

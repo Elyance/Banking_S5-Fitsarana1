@@ -55,7 +55,7 @@ public class CompteCourantRepository {
      */
     public List<CompteCourant> findByClientId(Long clientId) {
         TypedQuery<CompteCourant> query = em.createQuery(
-            "SELECT c FROM CompteCourant c WHERE c.client.id = :clientId ORDER BY c.numeroCompte", 
+            "SELECT c FROM CompteCourant c WHERE c.clientId = :clientId ORDER BY c.numeroCompte", 
             CompteCourant.class
         );
         query.setParameter("clientId", clientId);
@@ -162,7 +162,7 @@ public class CompteCourantRepository {
      */
     public long countByClientId(Long clientId) {
         TypedQuery<Long> query = em.createQuery(
-            "SELECT COUNT(c) FROM CompteCourant c WHERE c.client.id = :clientId", 
+            "SELECT COUNT(c) FROM CompteCourant c WHERE c.clientId = :clientId", 
             Long.class
         );
         query.setParameter("clientId", clientId);

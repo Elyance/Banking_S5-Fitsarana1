@@ -381,5 +381,74 @@ public class CompteCourantService implements CompteCourantServiceRemote {
         }
         return false;
     }
+
+    /**
+     * Vérifie si un compte peut effectuer un retrait
+     */
+    public boolean peutRetirerMontant(Long compteId, BigDecimal montant) {
+        CompteCourant compte = compteCourantRepository.findById(compteId);
+        if (compte == null) {
+            throw new IllegalArgumentException("Compte introuvable avec l'ID : " + compteId);
+        }
+
+        // Vérifier que le compte est actif
+        if (estCompteFerme(compteId) || estCompteSuspendu(compteId)) {
+            return false;
+        }
+
+        // Vérifier si le retrait est possible (solde + découvert autorisé)
+        BigDecimal soldeDisponible = compte.getSolde().add(compte.getDecouvertAutorise());
+        return montant.compareTo(soldeDisponible) <= 0;
+    }
+
+    /**
+     * Calcule le solde disponible d'un compte (solde + découvert autorisé)
+     */
+    public BigDecimal getSoldeDisponible(Long compteId) {
+        CompteCourant compte = compteCourantRepository.findById(compteId);
+        if (compte == null) {
+            throw new IllegalArgumentException("Compte introuvable avec l'ID : " + compteId);
+        }
+
+        return compte.getSolde().add(compte.getDecouvertAutorise());
+    }
+
+    /**
+     * Met à jour le découvert autorisé d'un compte
+     */
+    @Transactional
+    public CompteCourant modifierDecouvertAutorise(Long compteId, BigDecimal nouveauDecouvert) {
+        CompteCourant compte = compteCourantRepository.findById(compteId);
+        if (compte == null) {
+            throw new IllegalArgumentException("Compte introuvable avec l'ID : " + compteId);
+        }
+
+        if (nouveauDecouvert == null || nouveauDecouvert.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Le découvert autorisé ne peut pas être négatif");
+        }
+
+        compte.setDecouvertAutorise(nouveauDecouvert);
+        compte.setDateModification(LocalDateTime.now());
+        return compteCourantRepository.save(compte);
+    }
+
+    /**
+     * Compte le nombre total de comptes
+     */
+    public long getNombreTotalComptes() {
+        return compteCourantRepository.count();
+    }
+
+    /**
+     * Compte le nombre de transactions d'un compte
+     */
+    public long getNombreTransactions(Long compteId) {
+        CompteCourant compte = compteCourantRepository.findById(compteId);
+        if (compte == null) {
+            throw new IllegalArgumentException("Compte introuvable avec l'ID : " + compteId);
+        }
+        
+        return transactionRepository.countByCompteCourantId(compteId);
+    }
    
 }
