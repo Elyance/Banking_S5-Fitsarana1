@@ -1,7 +1,7 @@
 package com.centralisateur.repository;
 
 import com.centralisateur.entity.StatutClient;
-import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Repository pour la gestion des StatutClient
  */
-@Stateless
+@ApplicationScoped
 public class StatutClientRepository {
 
     @PersistenceContext(unitName = "CentralisateurPU")

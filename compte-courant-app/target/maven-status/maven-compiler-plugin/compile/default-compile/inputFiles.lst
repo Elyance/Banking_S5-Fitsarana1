@@ -1,0 +1,13 @@
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/repository/StatutCompteCourantMvtRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/repository/CompteCourantRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/repository/StatutCompteRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/entity/StatutCompteCourantMvt.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/repository/ClientRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/repository/TransactionRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/entity/TypeOperation.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/entity/StatutCompte.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/service/CompteCourantService.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/entity/CompteCourant.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/repository/TypeOperationRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/entity/Client.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-courant-app/src/main/java/com/compteCourant/entity/Transaction.java

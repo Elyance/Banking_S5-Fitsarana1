@@ -1,7 +1,7 @@
 package com.centralisateur.repository;
 
 import com.centralisateur.entity.MvtClient;
-import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Repository pour la gestion des mouvements de statut client
  */
-@Stateless
+@ApplicationScoped
 public class MvtClientRepository {
 
     @PersistenceContext(unitName = "CentralisateurPU")

@@ -7,23 +7,23 @@ import com.centralisateur.repository.ClientRepository;
 import com.centralisateur.repository.MvtClientRepository;
 import com.centralisateur.repository.StatutClientRepository;
 
-
-import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.inject.Inject;
+
 import java.time.LocalDateTime;
 
 @Stateless
 public class ClientService {
 
-    @EJB
+    @Inject
     private ClientRepository clientRepository;
 
-    @EJB
+    @Inject
     private MvtClientRepository mvtClientRepository;
 
-    @EJB
+    @Inject
     private StatutClientRepository statutClientRepository;
 
     
