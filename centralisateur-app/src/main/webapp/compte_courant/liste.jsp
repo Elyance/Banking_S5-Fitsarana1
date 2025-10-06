@@ -205,22 +205,9 @@
         <!-- Statistiques -->
         <div class="stats">
             <h3>📊 Statistiques</h3>
-            <p><strong>Nombre total de comptes :</strong> ${nombreTotalComptes}</p>
             <c:if test="${not empty comptes}">
                 <p><strong>Comptes affichés :</strong> ${comptes.size()}</p>
             </c:if>
-            
-            <!-- DEBUG INFO -->
-            <div style="background-color: #fff3cd; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 12px;">
-                <strong>🐛 Debug Info:</strong><br>
-                - comptes variable: ${comptes != null ? 'NOT NULL' : 'NULL'}<br>
-                - comptes.size(): ${comptes.size()}<br>
-                - clientsMap variable: ${clientsMap != null ? 'NOT NULL' : 'NULL'}<br>
-                - clientsMap.size(): ${clientsMap.size()}<br>
-                - nombreTotalComptes: ${nombreTotalComptes}<br>
-                - empty comptes: ${empty comptes}<br>
-                - not empty comptes: ${not empty comptes}
-            </div>
         </div>
 
         <!-- Actions en en-tête -->
@@ -256,74 +243,43 @@
                             <tr>
                                 <th>🆔 ID</th>
                                 <th>🔢 Numéro de Compte</th>
-                                <th>👤 Client</th>
+                                <th>👤 Client ID</th>
                                 <th>💰 Solde</th>
                                 <th>🏦 Découvert Autorisé</th>
                                 <th>💳 Solde Disponible</th>
                                 <th>📊 Statut</th>
                                 <th>📅 Date de Création</th>
-                                <th>⚙️ Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="compte" items="${comptes}" varStatus="status">
-                                <!-- 🐛 Debug pour chaque compte -->
-                                <%
-                                    System.out.println("🐛 JSP Debug - Compte " + pageContext.getAttribute("status"));
-                                    Object compte = pageContext.getAttribute("compte");
-                                    if (compte != null) {
-                                        System.out.println("   - Objet compte: " + compte.getClass().getName());
-                                        System.out.println("   - toString(): " + compte.toString());
-                                    } else {
-                                        System.out.println("   - Objet compte: NULL");
-                                    }
-                                %>
                                 <tr>
+                                    <td>${compte.id}</td>
+                                    <td><strong>${compte.numeroCompte}</strong></td>
+                                    <td>${compte.clientId}</td>
                                     <td>
-                                        🐛 [${compte.getId()}]
-                                    </td>
-                                    <td>
-                                        🐛 <strong>[${compte.getNumeroCompte()}]</strong>
-                                    </td>
-                                    <td>
-                                        🐛 <c:set var="client" value="${clientsMap[compte.getClientId()]}" />
-                                        Client ID: [${compte.getClientId()}]
                                         <c:choose>
-                                            <c:when test="${not empty client}">
-                                                <br><strong>${client.getNomComplet()}</strong>
-                                                <br><small>ID: ${compte.getClientId()}</small>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <br><span style="color: #dc3545;">Client introuvable (ID: ${compte.getClientId()})</span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        🐛 Solde: [${compte.getSolde()}]
-                                        <c:choose>
-                                            <c:when test="${compte.getSolde() >= 0}">
-                                                <br><span class="solde-positif">
-                                                    <fmt:formatNumber value="${compte.getSolde()}" type="currency" currencySymbol="€" />
+                                            <c:when test="${compte.solde >= 0}">
+                                                <span class="solde-positif">
+                                                    <fmt:formatNumber value="${compte.solde}" type="currency" currencySymbol="€" />
                                                 </span>
                                             </c:when>
                                             <c:otherwise>
-                                                <br><span class="solde-negatif">
-                                                    <fmt:formatNumber value="${compte.getSolde()}" type="currency" currencySymbol="€" />
+                                                <span class="solde-negatif">
+                                                    <fmt:formatNumber value="${compte.solde}" type="currency" currencySymbol="€" />
                                                 </span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td>
-                                        🐛 Découvert: [${compte.getDecouvertAutorise()}]
-                                        <br><fmt:formatNumber value="${compte.getDecouvertAutorise()}" type="currency" currencySymbol="€" />
+                                        <fmt:formatNumber value="${compte.decouvertAutorise}" type="currency" currencySymbol="€" />
                                     </td>
                                     <td>
-                                        🐛 <c:set var="soldeDisponible" value="${compte.getSoldeDisponible()}" />
-                                        Disponible: [${soldeDisponible}]
-                                        <br><fmt:formatNumber value="${soldeDisponible}" type="currency" currencySymbol="€" />
+                                        <c:set var="soldeDisponible" value="${compte.soldeDisponible}" />
+                                        <fmt:formatNumber value="${soldeDisponible}" type="currency" currencySymbol="€" />
                                     </td>
                                     <td>
-                                        🐛 <c:choose>
+                                        <c:choose>
                                             <c:when test="${compte.estEnDecouvert()}">
                                                 <span class="solde-negatif">⚠️ En découvert</span>
                                             </c:when>
@@ -333,13 +289,7 @@
                                         </c:choose>
                                     </td>
                                     <td>
-                                        🐛 Date: [${compte.getDateCreation()}]
-                                        <br><fmt:formatDate value="${compte.getDateCreation()}" pattern="dd/MM/yyyy HH:mm" />
-                                    </td>
-                                    <td class="actions">
-                                        <a href="${pageContext.request.contextPath}/compte-courant/details?id=${compte.getId()}" class="btn btn-info">
-                                            👁️ Détails
-                                        </a>
+                                        <fmt:formatDate value="${compte.dateCreation}" pattern="dd/MM/yyyy HH:mm" />
                                     </td>
                                 </tr>
                             </c:forEach>

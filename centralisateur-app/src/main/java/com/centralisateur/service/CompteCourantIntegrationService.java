@@ -6,9 +6,8 @@ import com.compteCourant.entity.Transaction;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 /**
  * Service d'intégration avec le module compte-courant
@@ -93,6 +92,32 @@ public class CompteCourantIntegrationService {
     public List<CompteCourant> getTousLesComptes() {
         try {
             return compteCourantService.getTousLesComptes();
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la récupération des comptes: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Récupère tous les comptes courants sous forme de tableau d'objets
+     */
+    public List<CompteCourant> getTousLesComptesAsArray() {
+        try {
+            List<Object[]> data = compteCourantService.getTousLesComptesAsArray();
+            List<CompteCourant> comptes = new ArrayList<>();
+            
+            for (Object[] row : data) {
+                CompteCourant compte = new CompteCourant();
+                compte.setId((Long) row[0]);
+                compte.setNumeroCompte((String) row[1]);
+                compte.setClientId((Long) row[2]);
+                compte.setSolde((java.math.BigDecimal) row[3]);
+                compte.setDecouvertAutorise((java.math.BigDecimal) row[4]);
+                compte.setDateCreation((java.time.LocalDateTime) row[5]);
+                compte.setDateModification((java.time.LocalDateTime) row[6]);
+                comptes.add(compte);
+            }
+            
+            return comptes;
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de la récupération des comptes: " + e.getMessage(), e);
         }
@@ -194,18 +219,6 @@ public class CompteCourantIntegrationService {
             return compteCourantService.getNombreTransactions(compteId);
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors du comptage des transactions: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Teste la connexion avec le service distant
-     */
-    public boolean testerConnexion() {
-        try {
-            compteCourantService.getNombreTotalComptes();
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 }

@@ -173,6 +173,9 @@
             <a href="compte-courant/liste" class="btn">
                 📋 Liste des Comptes
             </a>
+            <a href="compte_courant/transaction" class="btn">
+                💰 Nouvelle Transaction
+            </a>
         </div>
 
         <div class="api-info">
@@ -206,6 +209,12 @@
             </div>
             <div class="endpoint">
                 <span class="method get">GET</span> /compte-courant/liste - Liste des comptes courants
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /transaction - Formulaire de transaction
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span> /transaction - Traitement transaction (dépôt/retrait)
             </div>
             <div class="endpoint">
                 <span class="method get">GET</span> /test-compte-courant - Test d'intégration

@@ -43,11 +43,6 @@ public class CompteCourantService implements CompteCourantServiceRemote {
     private StatutCompteCourantMvtRepository statutCompteCourantMvtRepository;
 
 
-    // Libellés des statuts de compte
-    private static final String STATUT_ACTIF = "ACTIF";
-    private static final String STATUT_FERME = "FERME";
-
-
     /**
      * Crée un nouveau compte courant
      */
@@ -77,7 +72,7 @@ public class CompteCourantService implements CompteCourantServiceRemote {
         compte = compteCourantRepository.save(compte);
 
         // Créer un mouvement de statut initial (ACTIF)
-        StatutCompte statutActif = statutCompteRepository.findByLibelle(STATUT_ACTIF);
+        StatutCompte statutActif = statutCompteRepository.findById(1L);
         if (statutActif != null) {
             StatutCompteCourantMvt mouvementInitial = new StatutCompteCourantMvt();
             mouvementInitial.setCompteCourantId(compte.getId());
@@ -105,7 +100,7 @@ public class CompteCourantService implements CompteCourantServiceRemote {
         }
 
         // Récupérer le statut FERME
-        StatutCompte statutFerme = statutCompteRepository.findByLibelle(STATUT_FERME);
+        StatutCompte statutFerme = statutCompteRepository.findById(3L);
         if (statutFerme == null) {
             throw new IllegalStateException("Statut FERME non configuré dans la base de données");
         }
@@ -292,6 +287,22 @@ public class CompteCourantService implements CompteCourantServiceRemote {
      */
     public List<CompteCourant> getTousLesComptes() {
         return compteCourantRepository.findAll();
+    }
+
+    /**
+     * Récupère les données des comptes sous forme de tableau d'objets
+     */
+    public List<Object[]> getTousLesComptesAsArray() {
+        List<CompteCourant> entites = compteCourantRepository.findAll();
+        return entites.stream().map(compte -> new Object[]{
+            compte.getId(),
+            compte.getNumeroCompte(),
+            compte.getClientId(),
+            compte.getSolde(),
+            compte.getDecouvertAutorise(),
+            compte.getDateCreation(),
+            compte.getDateModification()
+        }).collect(java.util.stream.Collectors.toList());
     }
 
     /**

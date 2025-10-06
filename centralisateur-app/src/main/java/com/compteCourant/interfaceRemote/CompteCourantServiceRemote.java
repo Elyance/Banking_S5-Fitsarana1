@@ -54,6 +54,12 @@ public interface CompteCourantServiceRemote {
     List<CompteCourant> getTousLesComptes();
     
     /**
+     * Récupère les données des comptes sous forme de tableau d'objets
+     * [0] = id, [1] = numeroCompte, [2] = clientId, [3] = solde, [4] = decouvertAutorise, [5] = dateCreation, [6] = dateModification
+     */
+    List<Object[]> getTousLesComptesAsArray();
+    
+    /**
      * Récupère un compte par son ID
      */
     CompteCourant getCompteParId(Long compteId);
