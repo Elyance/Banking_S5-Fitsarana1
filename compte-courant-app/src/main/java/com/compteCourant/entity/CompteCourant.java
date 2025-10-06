@@ -1,6 +1,7 @@
 package com.compteCourant.entity;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,7 +11,9 @@ import java.util.List;
  */
 @Entity
 @Table(name = "compte_courant")
-public class CompteCourant {
+public class CompteCourant implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,12 +37,14 @@ public class CompteCourant {
     @Column(name = "date_modification")
     private LocalDateTime dateModification;
 
-    // Relations JPA
+    // Relations JPA - marquées transient pour éviter les problèmes de sérialisation EJB
     @OneToMany(mappedBy = "compteCourant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Transaction> transactions;
+    @Transient
+    private transient List<Transaction> transactions;
 
     @OneToMany(mappedBy = "compteCourant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<StatutCompteCourantMvt> mouvementsStatut;
+    @Transient
+    private transient List<StatutCompteCourantMvt> mouvementsStatut;
 
     // Constructeurs
     public CompteCourant() {

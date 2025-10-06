@@ -54,6 +54,13 @@
             <scope>provided</scope>
         </dependency>
         
+        <!-- DTO Shared Library -->
+        <dependency>
+            <groupId>com.banque</groupId>
+            <artifactId>dto-shared</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        
         <!-- JSTL pour Tomcat - implémentation complète -->
         <dependency>
             <groupId>org.glassfish.web</groupId>

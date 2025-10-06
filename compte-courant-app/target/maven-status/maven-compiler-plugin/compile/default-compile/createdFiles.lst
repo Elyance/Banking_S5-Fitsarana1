@@ -1,4 +1,5 @@
 com/compteCourant/entity/CompteCourant.class
+com/compteCourant/dto/CompteClientDTO.class
 com/compteCourant/entity/Transaction.class
 com/compteCourant/repository/CompteCourantRepository.class
 com/compteCourant/entity/StatutCompteCourantMvt.class

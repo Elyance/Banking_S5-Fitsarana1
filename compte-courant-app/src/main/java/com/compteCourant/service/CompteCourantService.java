@@ -5,6 +5,7 @@ import com.compteCourant.entity.StatutCompte;
 import com.compteCourant.entity.StatutCompteCourantMvt;
 import com.compteCourant.entity.Transaction;
 import com.compteCourant.entity.TypeOperation;
+import com.banque.dto.CompteStatutDTO;
 import com.compteCourant.repository.CompteCourantRepository;
 import com.compteCourant.repository.StatutCompteRepository;
 import com.compteCourant.repository.StatutCompteCourantMvtRepository;
@@ -53,10 +54,14 @@ public class CompteCourantService implements CompteCourantServiceRemote {
             throw new IllegalArgumentException("Un compte avec ce numéro existe déjà : " + numeroCompte);
         }
 
-        // Vérifier si le client a déjà un compte courant
-        List<CompteCourant> comptesExistants = compteCourantRepository.findByClientId(clientId);
-        if (!comptesExistants.isEmpty()) {
-            throw new IllegalArgumentException("Le client avec l'ID " + clientId + " possède déjà un compte courant. Numéro de compte existant : " + comptesExistants.get(0).getNumeroCompte());
+        // Vérifier si le client a déjà des comptes actifs ou suspendus
+        if (compteCourantRepository.clientADesComptesActifsOuSuspendus(clientId)) {
+            List<String> comptesActifs = compteCourantRepository.getComptesActifsOuSuspendusAvecStatuts(clientId);
+            String messageErreur = "Le client avec l'ID " + clientId + " possède déjà des comptes courants actifs ou suspendus : " + 
+                                 String.join(", ", comptesActifs) + 
+                                 ". Un client ne peut avoir qu'un seul compte actif ou suspendu à la fois. " +
+                                 "Les comptes fermés n'empêchent pas la création d'un nouveau compte.";
+            throw new IllegalArgumentException(messageErreur);
         }
 
         // Créer le nouveau compte
@@ -290,6 +295,13 @@ public class CompteCourantService implements CompteCourantServiceRemote {
     }
 
     /**
+     * Récupère tous les comptes avec leur statut actuel (JOIN)
+     */
+    public List<CompteStatutDTO> getTousLesComptesAvecStatut() {
+        return compteCourantRepository.findAllComptesAvecStatut();
+    }
+
+    /**
      * Récupère les données des comptes sous forme de tableau d'objets
      */
     public List<Object[]> getTousLesComptesAsArray() {
@@ -460,6 +472,20 @@ public class CompteCourantService implements CompteCourantServiceRemote {
         }
         
         return transactionRepository.countByCompteCourantId(compteId);
+    }
+    
+    /**
+     * Récupère le statut actuel d'un compte
+     */
+    public String getStatutActuelCompte(Long compteId) {
+        return compteCourantRepository.getStatutActuelCompte(compteId);
+    }
+    
+    /**
+     * Vérifie si un client peut créer un nouveau compte
+     */
+    public boolean clientPeutCreerNouveauCompte(Long clientId) {
+        return !compteCourantRepository.clientADesComptesActifsOuSuspendus(clientId);
     }
    
 }

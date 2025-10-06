@@ -2,6 +2,7 @@ package com.compteCourant.interfaceRemote;
 
 import com.compteCourant.entity.CompteCourant;
 import com.compteCourant.entity.Transaction;
+import com.banque.dto.CompteStatutDTO;
 import jakarta.ejb.Remote;
 import java.math.BigDecimal;
 import java.util.List;
@@ -49,9 +50,14 @@ public interface CompteCourantServiceRemote {
     List<Transaction> getTransactionsParCompte(Long compteId, int offset, int limit);
     
     /**
-     * Récupère la liste de tous les comptes courants
+     * Récupère la liste de tous les comptes courants (entités complètes)
      */
     List<CompteCourant> getTousLesComptes();
+    
+    /**
+     * Récupère tous les comptes avec leur statut actuel (JOIN optimisé)
+     */
+    List<CompteStatutDTO> getTousLesComptesAvecStatut();
     
     /**
      * Récupère les données des comptes sous forme de tableau d'objets
@@ -103,5 +109,15 @@ public interface CompteCourantServiceRemote {
      * Compte le nombre de transactions d'un compte
      */
     long getNombreTransactions(Long compteId);
+    
+    /**
+     * Récupère le statut actuel d'un compte
+     */
+    String getStatutActuelCompte(Long compteId);
+    
+    /**
+     * Vérifie si un client peut créer un nouveau compte
+     */
+    boolean clientPeutCreerNouveauCompte(Long clientId);
     
 }

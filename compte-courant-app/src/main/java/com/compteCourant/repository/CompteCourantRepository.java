@@ -1,13 +1,17 @@
 package com.compteCourant.repository;
 
 import com.compteCourant.entity.CompteCourant;
+import com.banque.dto.CompteStatutDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Repository pour la gestion des Comptes Courants
@@ -167,5 +171,145 @@ public class CompteCourantRepository {
         );
         query.setParameter("clientId", clientId);
         return query.getSingleResult();
+    }
+
+    /**
+     * Récupère tous les comptes avec informations client (via JOIN)
+     * Retourne directement des CompteClientDTO
+     */
+    /**
+     * Récupère tous les comptes avec leur statut actuel via JOIN
+     */
+    public List<CompteStatutDTO> findAllComptesAvecStatut() {
+        // Requête native pour faire le JOIN avec les statuts
+        String sql = """
+            SELECT 
+                c.id as compte_id,
+                c.numero_compte,
+                c.solde,
+                c.client_id,
+                c.date_creation,
+                COALESCE(sc.id, 1) as statut_id,
+                CAST(0 AS DECIMAL(15,2)) as solde_minimum,
+                c.decouvert_autorise,
+                COALESCE(sccm.date_mvt, c.date_creation) as date_statut
+            FROM compte_courant c
+            LEFT JOIN statut_compte_courant_mvt sccm ON c.id = sccm.compte_courant_id 
+                AND sccm.date_mvt = (
+                    SELECT MAX(sccm2.date_mvt) 
+                    FROM statut_compte_courant_mvt sccm2 
+                    WHERE sccm2.compte_courant_id = c.id
+                )
+            LEFT JOIN statut_compte sc ON sccm.statut_compte_id = sc.id
+            ORDER BY c.numero_compte
+            """;
+
+        Query query = em.createNativeQuery(sql);
+        @SuppressWarnings("unchecked")
+        List<Object[]> resultList = (List<Object[]>) query.getResultList();
+        
+        List<CompteStatutDTO> comptes = new ArrayList<>();
+        for (Object[] row : resultList) {
+            CompteStatutDTO dto = new CompteStatutDTO();
+            dto.setCompteId(((Number) row[0]).longValue());
+            dto.setNumeroCompte((String) row[1]);
+            dto.setSolde((BigDecimal) row[2]);
+            dto.setClientId(row[3] != null ? ((Number) row[3]).longValue() : null);
+            dto.setDateCreation(((java.sql.Timestamp) row[4]).toLocalDateTime());
+            dto.setStatutId(((Number) row[5]).longValue());
+            dto.setSoldeMinimum((BigDecimal) row[6]);
+            dto.setDecouvertAutorise((BigDecimal) row[7]);
+            dto.setDateStatut(row[8] != null ? ((java.sql.Timestamp) row[8]).toLocalDateTime() : null);
+            
+            comptes.add(dto);
+        }
+        
+        return comptes;
+    }
+    
+    /**
+     * Vérifie si un client a des comptes courants actifs ou suspendus
+     */
+    public boolean clientADesComptesActifsOuSuspendus(Long clientId) {
+        String sql = """
+            SELECT COUNT(*)
+            FROM compte_courant c
+            LEFT JOIN statut_compte_courant_mvt sccm ON c.id = sccm.compte_courant_id 
+                AND sccm.date_mvt = (
+                    SELECT MAX(sccm2.date_mvt) 
+                    FROM statut_compte_courant_mvt sccm2 
+                    WHERE sccm2.compte_courant_id = c.id
+                )
+            LEFT JOIN statut_compte sc ON sccm.statut_compte_id = sc.id
+            WHERE c.client_id = :clientId
+                AND (sc.libelle IS NULL OR sc.libelle IN ('ACTIF', 'SUSPENDU'))
+            """;
+            
+        Query query = em.createNativeQuery(sql);
+        query.setParameter("clientId", clientId);
+        
+        Number count = (Number) query.getSingleResult();
+        return count.longValue() > 0;
+    }
+    
+    /**
+     * Récupère les comptes actifs ou suspendus d'un client avec leurs statuts
+     */
+    public List<String> getComptesActifsOuSuspendusAvecStatuts(Long clientId) {
+        String sql = """
+            SELECT c.numero_compte, COALESCE(sc.libelle, 'ACTIF') as statut
+            FROM compte_courant c
+            LEFT JOIN statut_compte_courant_mvt sccm ON c.id = sccm.compte_courant_id 
+                AND sccm.date_mvt = (
+                    SELECT MAX(sccm2.date_mvt) 
+                    FROM statut_compte_courant_mvt sccm2 
+                    WHERE sccm2.compte_courant_id = c.id
+                )
+            LEFT JOIN statut_compte sc ON sccm.statut_compte_id = sc.id
+            WHERE c.client_id = :clientId
+                AND (sc.libelle IS NULL OR sc.libelle IN ('ACTIF', 'SUSPENDU'))
+            """;
+            
+        Query query = em.createNativeQuery(sql);
+        query.setParameter("clientId", clientId);
+        
+        @SuppressWarnings("unchecked")
+        List<Object[]> resultList = (List<Object[]>) query.getResultList();
+        
+        List<String> comptes = new ArrayList<>();
+        for (Object[] row : resultList) {
+            String numeroCompte = (String) row[0];
+            String statut = (String) row[1];
+            comptes.add(numeroCompte + " (" + statut + ")");
+        }
+        
+        return comptes;
+    }
+    
+    /**
+     * Récupère le statut actuel d'un compte courant
+     */
+    public String getStatutActuelCompte(Long compteId) {
+        String sql = """
+            SELECT COALESCE(sc.libelle, 'ACTIF') as statut
+            FROM compte_courant c
+            LEFT JOIN statut_compte_courant_mvt sccm ON c.id = sccm.compte_courant_id 
+                AND sccm.date_mvt = (
+                    SELECT MAX(sccm2.date_mvt) 
+                    FROM statut_compte_courant_mvt sccm2 
+                    WHERE sccm2.compte_courant_id = c.id
+                )
+            LEFT JOIN statut_compte sc ON sccm.statut_compte_id = sc.id
+            WHERE c.id = :compteId
+            """;
+            
+        Query query = em.createNativeQuery(sql);
+        query.setParameter("compteId", compteId);
+        
+        try {
+            return (String) query.getSingleResult();
+        } catch (Exception e) {
+            return "ACTIF"; // Statut par défaut si aucun statut trouvé
+        }
     }
 }

@@ -6,290 +6,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Comptes Courants - Banque Centralisateur</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2c5aa0;
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #2c5aa0;
-            padding-bottom: 10px;
-        }
-        .header-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .stats {
-            background-color: #e8f4f8;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .stats h3 {
-            margin: 0 0 10px 0;
-            color: #2c5aa0;
-        }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
-        .btn-primary {
-            background-color: #2c5aa0;
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #1a3d73;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-            font-size: 12px;
-            padding: 5px 10px;
-        }
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-        .btn-info {
-            background-color: #17a2b8;
-            color: white;
-            font-size: 12px;
-            padding: 5px 10px;
-        }
-        .btn-info:hover {
-            background-color: #138496;
-        }
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .table-container {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #2c5aa0;
-            color: white;
-            font-weight: bold;
-        }
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        tr:hover {
-            background-color: #e8f4f8;
-        }
-        .status-actif {
-            color: #28a745;
-            font-weight: bold;
-        }
-        .status-ferme {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        .solde-positif {
-            color: #28a745;
-            font-weight: bold;
-        }
-        .solde-negatif {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        .actions {
-            white-space: nowrap;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #6c757d;
-        }
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 20px;
-            display: block;
-        }
-        .navigation {
-            margin-bottom: 20px;
-        }
-        .navigation a {
-            color: #2c5aa0;
-            text-decoration: none;
-            margin-right: 10px;
-        }
-        .navigation a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            .header-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            table {
-                font-size: 12px;
-            }
-            th, td {
-                padding: 8px;
-            }
-        }
-    </style>
+    <title>Gestion des Comptes Courants - Banking S5</title>
 </head>
 <body>
-    <div class="container">
-        <!-- Navigation -->
-        <div class="navigation">
+    <header>
+        <h1>🏦 Gestion des Comptes Courants</h1>
+        <nav>
             <a href="${pageContext.request.contextPath}/">🏠 Accueil</a> |
-            <a href="${pageContext.request.contextPath}/client/liste">👥 Clients</a> |
-            <a href="${pageContext.request.contextPath}/compte-courant/creer">➕ Créer un compte</a>
-        </div>
+            <a href="${pageContext.request.contextPath}/clients">👥 Clients</a> |
+            <a href="${pageContext.request.contextPath}/compte-courant/creer">➕ Nouveau Compte</a>
+        </nav>
+    </header>
 
-        <h1>📋 Liste des Comptes Courants</h1>
-
-        <!-- Messages -->
+    <main>
+        <!-- Messages d'état -->
         <c:if test="${not empty success}">
-            <div class="alert alert-success">
+            <div class="alert-success">
                 ✅ ${success}
             </div>
         </c:if>
 
         <c:if test="${not empty error}">
-            <div class="alert alert-error">
+            <div class="alert-error">
                 ❌ ${error}
             </div>
         </c:if>
 
-        <!-- Statistiques -->
-        <div class="stats">
-            <h3>📊 Statistiques</h3>
-            <c:if test="${not empty comptes}">
-                <p><strong>Comptes affichés :</strong> ${comptes.size()}</p>
+        <!-- Informations générales -->
+        <section>
+            <h2>📊 Tableau de Bord</h2>
+            <div>
+                <p><strong>Nombre total de comptes :</strong> ${nombreComptes}</p>
+                <p><strong>Source des données :</strong> ${sourceData}</p>
+                <p><strong>Dernière mise à jour :</strong> <fmt:formatDate value="<%= new java.util.Date() %>" pattern="dd/MM/yyyy HH:mm:ss" /></p>
+            </div>
+        </section>
+
+        <!-- Actions rapides -->
+        <section>
+            <h3>⚡ Actions Rapides</h3>
+            <a href="${pageContext.request.contextPath}/compte-courant/creer">➕ Créer un nouveau compte</a> |
+            <a href="${pageContext.request.contextPath}/compte_courant/transaction">💰 Effectuer une transaction</a> |
+            <a href="javascript:window.location.reload()">🔄 Actualiser la liste</a>
+        </section>
+
+        <!-- Liste des comptes -->
+        <section>
+            <h3>📋 Liste des Comptes Courants</h3>
+            
+            <!-- Messages de succès et d'erreur -->
+            <c:if test="${not empty sessionScope.successMessage}">
+                <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #28a745;">
+                    <strong>✅ Succès :</strong> ${sessionScope.successMessage}
+                </div>
+                <%-- Supprimer le message après affichage --%>
+                <c:remove var="successMessage" scope="session"/>
             </c:if>
-        </div>
-
-        <!-- Actions en en-tête -->
-        <div class="header-actions">
-            <div>
-                <a href="${pageContext.request.contextPath}/compte-courant/creer" class="btn btn-primary">
-                    ➕ Créer un nouveau compte
-                </a>
-            </div>
-            <div>
-                <a href="${pageContext.request.contextPath}/compte-courant/liste" class="btn btn-info">
-                    🔄 Actualiser
-                </a>
-            </div>
-        </div>
-
-        <!-- Table des comptes -->
-        <div class="table-container">
+            
+            <c:if test="${not empty sessionScope.errorMessage}">
+                <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #dc3545;">
+                    <strong>❌ Erreur :</strong> ${sessionScope.errorMessage}
+                </div>
+                <%-- Supprimer le message après affichage --%>
+                <c:remove var="errorMessage" scope="session"/>
+            </c:if>
+            
             <c:choose>
                 <c:when test="${empty comptes}">
                     <div class="empty-state">
-                        <i>💳</i>
-                        <h3>Aucun compte courant trouvé</h3>
+                        <h4>Aucun compte courant trouvé</h4>
                         <p>Il n'y a actuellement aucun compte courant dans le système.</p>
-                        <a href="${pageContext.request.contextPath}/compte-courant/creer" class="btn btn-primary">
-                            Créer le premier compte
-                        </a>
+                        <a href="${pageContext.request.contextPath}/compte-courant/creer">Créer le premier compte</a>
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <table>
+                    <table border="1" cellpadding="8" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>🆔 ID</th>
-                                <th>🔢 Numéro de Compte</th>
-                                <th>👤 Client ID</th>
-                                <th>💰 Solde</th>
-                                <th>🏦 Découvert Autorisé</th>
-                                <th>💳 Solde Disponible</th>
-                                <th>📊 Statut</th>
-                                <th>📅 Date de Création</th>
+                                <th>N° Compte</th>
+                                <th>Client</th>
+                                <th>Email</th>
+                                <th>Solde Actuel</th>
+                                <th>Découvert Autorisé</th>
+                                <th>Solde Disponible</th>
+                                <th>Statut</th>
+                                <th>Date Ouverture</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="compte" items="${comptes}" varStatus="status">
                                 <tr>
-                                    <td>${compte.id}</td>
-                                    <td><strong>${compte.numeroCompte}</strong></td>
-                                    <td>${compte.clientId}</td>
+                                    <!-- Numéro de compte -->
                                     <td>
+                                        <strong>${compte.numeroCompte}</strong>
+                                        <br><small>ID: ${compte.compteId}</small>
+                                    </td>
+                                    
+                                    <!-- Client -->
+                                    <td>
+                                        <strong>${compte.nomComplet}</strong>
+                                        <br><small>ID Client: ${compte.clientId}</small>
+                                    </td>
+                                    
+                                    <!-- Email -->
+                                    <td>${compte.emailClient}</td>
+                                    
+                                    <!-- Solde -->
+                                    <td class="${compte.classeSolde}">
                                         <c:choose>
-                                            <c:when test="${compte.solde >= 0}">
-                                                <span class="solde-positif">
+                                            <c:when test="${compte.enDecouvert}">
+                                                <span style="color: red;">
                                                     <fmt:formatNumber value="${compte.solde}" type="currency" currencySymbol="€" />
+                                                    <br><small>⚠️ En découvert</small>
                                                 </span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="solde-negatif">
+                                                <span style="color: green;">
                                                     <fmt:formatNumber value="${compte.solde}" type="currency" currencySymbol="€" />
                                                 </span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
+                                    
+                                    <!-- Découvert autorisé -->
                                     <td>
                                         <fmt:formatNumber value="${compte.decouvertAutorise}" type="currency" currencySymbol="€" />
                                     </td>
+                                    
+                                    <!-- Solde disponible -->
                                     <td>
-                                        <c:set var="soldeDisponible" value="${compte.soldeDisponible}" />
-                                        <fmt:formatNumber value="${soldeDisponible}" type="currency" currencySymbol="€" />
+                                        <strong>
+                                            <fmt:formatNumber value="${compte.soldeDisponible}" type="currency" currencySymbol="€" />
+                                        </strong>
                                     </td>
-                                    <td>
+                                    
+                                    <!-- Statut -->
+                                    <td class="${compte.classeStatut}">
                                         <c:choose>
-                                            <c:when test="${compte.estEnDecouvert()}">
-                                                <span class="solde-negatif">⚠️ En découvert</span>
+                                            <c:when test="${compte.statutCompte == 'ACTIF'}">
+                                                <span style="color: green;">✅ ${compte.statutCompte}</span>
+                                            </c:when>
+                                            <c:when test="${compte.statutCompte == 'SUSPENDU'}">
+                                                <span style="color: orange;">⏸️ ${compte.statutCompte}</span>
+                                            </c:when>
+                                            <c:when test="${compte.statutCompte == 'FERME'}">
+                                                <span style="color: red;">❌ ${compte.statutCompte}</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="status-actif">✅ Normal</span>
+                                                <span style="color: gray;">❓ ${compte.statutCompte}</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
+                                    
+                                    <!-- Date ouverture -->
                                     <td>
-                                        <fmt:formatDate value="${compte.dateCreation}" pattern="dd/MM/yyyy HH:mm" />
+                                        ${compte.dateCreationFormatee}
+                                    </td>
+                                    
+                                    <!-- Actions -->
+                                    <td>
+                                        <a href="${pageContext.request.contextPath}/compte-courant/transaction?compteId=${compte.compteId}">💰 Transaction</a>
+                                        <br>
+                                        <a href="${pageContext.request.contextPath}/compte-courant/transactions?compteId=${compte.compteId}">📊 Historique</a>
+                                        <br>
+                                        <a href="${pageContext.request.contextPath}/compte-courant/detail?id=${compte.compteId}">👁️ Détails</a>
+                                        <br>
+                                        <a href="${pageContext.request.contextPath}/clients?action=details&id=${compte.clientId}">👤 Client</a>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -297,24 +180,29 @@
                     </table>
                 </c:otherwise>
             </c:choose>
-        </div>
+        </section>
 
-        <!-- Footer -->
-        <div style="margin-top: 30px; text-align: center; color: #6c757d; border-top: 1px solid #eee; padding-top: 20px;">
-            <p>© 2025 Banque Centralisateur - Système de Gestion des Comptes Courants</p>
-        </div>
-    </div>
+        <!-- Statistiques résumées -->
+        <section>
+            <h3>📈 Résumé</h3>
+            <c:if test="${not empty comptes}">
+                <c:set var="totalSoldes" value="0" />
+                <c:set var="comptesEnDecouvert" value="0" />
+                <c:forEach var="compte" items="${comptes}">
+                    <c:set var="totalSoldes" value="${totalSoldes + compte.solde}" />
+                    <c:if test="${compte.enDecouvert}">
+                        <c:set var="comptesEnDecouvert" value="${comptesEnDecouvert + 1}" />
+                    </c:if>
+                </c:forEach>
+                <p><strong>Total des soldes :</strong> <fmt:formatNumber value="${totalSoldes}" type="currency" currencySymbol="€" /></p>
+                <p><strong>Comptes en découvert :</strong> ${comptesEnDecouvert} / ${nombreComptes}</p>
+            </c:if>
+        </section>
+    </main>
 
-    <script>
-        // Auto-actualisation toutes les 30 secondes (optionnel)
-        // setTimeout(function() {
-        //     window.location.reload();
-        // }, 30000);
-
-        // Confirmation pour les actions critiques
-        function confirmerAction(action, detail) {
-            return confirm('Êtes-vous sûr de vouloir ' + action + ' ' + detail + ' ?');
-        }
-    </script>
+    <footer>
+        <hr>
+        <p><em>Banking S5 - Système de Gestion Bancaire - ${sourceData}</em></p>
+    </footer>
 </body>
 </html>

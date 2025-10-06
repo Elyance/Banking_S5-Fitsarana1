@@ -3,6 +3,7 @@ package com.centralisateur.service;
 import com.compteCourant.interfaceRemote.CompteCourantServiceRemote;
 import com.compteCourant.entity.CompteCourant;
 import com.compteCourant.entity.Transaction;
+import com.banque.dto.CompteStatutDTO;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
@@ -39,6 +40,17 @@ public class CompteCourantIntegrationService {
             return compteCourantService.supprimerCompteCourant(compteId);
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de la fermeture du compte courant: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Supprime définitivement un compte courant
+     */
+    public boolean supprimerCompteCourant(Long compteId) {
+        try {
+            return compteCourantService.supprimerCompteCourant(compteId);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la suppression du compte courant: " + e.getMessage(), e);
         }
     }
 
@@ -94,6 +106,17 @@ public class CompteCourantIntegrationService {
             return compteCourantService.getTousLesComptes();
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de la récupération des comptes: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Récupère tous les comptes avec leurs statuts via JOIN optimisé
+     */
+    public List<CompteStatutDTO> getTousLesComptesAvecStatut() {
+        try {
+            return compteCourantService.getTousLesComptesAvecStatut();
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la récupération des comptes avec statut: " + e.getMessage(), e);
         }
     }
 
@@ -219,6 +242,28 @@ public class CompteCourantIntegrationService {
             return compteCourantService.getNombreTransactions(compteId);
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors du comptage des transactions: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Récupère le statut actuel d'un compte
+     */
+    public String getStatutActuelCompte(Long compteId) {
+        try {
+            return compteCourantService.getStatutActuelCompte(compteId);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la récupération du statut du compte: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Vérifie si un client peut créer un nouveau compte
+     */
+    public boolean clientPeutCreerNouveauCompte(Long clientId) {
+        try {
+            return compteCourantService.clientPeutCreerNouveauCompte(clientId);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la vérification des comptes du client: " + e.getMessage(), e);
         }
     }
 }

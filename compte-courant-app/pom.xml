@@ -53,6 +53,13 @@
             <version>9.1.0</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- DTO Shared Library -->
+        <dependency>
+            <groupId>com.banque</groupId>
+            <artifactId>dto-shared</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 
