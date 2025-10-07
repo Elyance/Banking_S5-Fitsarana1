@@ -1,0 +1,12 @@
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/entity/TypePaiement.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/repository/MvtStatutComptePretRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/entity/MvtStatutComptePret.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/entity/ComptePret.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/interfaceRemote/ComptePretServiceRemote.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/repository/StatutComptePretRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/repository/TypePaiementRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/repository/ComptePretRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/entity/Remboursement.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/repository/RemboursementRepository.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/service/ComptePretService.java
+/home/elyance/Documents/S5/Programmation/Banking_S5-Fitsarana1/compte-pret-app/src/main/java/com/comptePret/entity/StatutComptePret.java

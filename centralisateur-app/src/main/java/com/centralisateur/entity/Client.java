@@ -165,6 +165,26 @@ public class Client {
     public String getNomComplet() {
         return prenom + " " + nom;
     }
+    
+    public String getDateCreationFormatee() {
+        if (dateCreation == null) {
+            return "";
+        }
+        return String.format("%02d/%02d/%d", 
+            dateCreation.getDayOfMonth(), 
+            dateCreation.getMonthValue(), 
+            dateCreation.getYear());
+    }
+    
+    public String getDateModificationFormatee() {
+        if (dateModification == null) {
+            return "";
+        }
+        return String.format("%02d/%02d/%d", 
+            dateModification.getDayOfMonth(), 
+            dateModification.getMonthValue(), 
+            dateModification.getYear());
+    }
 
     @Override
     public String toString() {

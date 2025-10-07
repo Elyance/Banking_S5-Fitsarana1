@@ -8,10 +8,10 @@ configuration anle base (database,table)
 configuration de datasource
     - miditra ao am cli ./jboss-cli.sh --connect
     - on insere ca : 
-            /subsystem=datasources/data-source=BanqueCentralisateur:add(\
-jndi-name=java:jboss/datasources/BanqueCentralisateur,\
+            /subsystem=datasources/data-source=BanqueCP:add(\
+jndi-name=java:jboss/datasources/BanqueCP,\
 driver-name=postgresql,\
-connection-url=jdbc:postgresql://localhost:5432/centralisateur_db,\
+connection-url=jdbc:postgresql://localhost:5432/compte_pret_db,\
 user-name=postgres,\
 password=postgres,\
 min-pool-size=5,\
@@ -20,8 +20,8 @@ pool-prefill=true,\
 transaction-isolation=TRANSACTION_READ_COMMITTED,\
 check-valid-connection-sql="SELECT 1")
     
-    - on enable la datasource : /subsystem=datasources/data-source=BanqueCentralisateur:enable
-    - on teste la connexion : /subsystem=datasources/data-source=BanqueCentralisateur:test-connection-in-pool
+    - on enable la datasource : /subsystem=datasources/data-source=BanqueCP:enable
+    - on teste la connexion : /subsystem=datasources/data-source=BanqueCP:test-connection-in-pool
 
 
 

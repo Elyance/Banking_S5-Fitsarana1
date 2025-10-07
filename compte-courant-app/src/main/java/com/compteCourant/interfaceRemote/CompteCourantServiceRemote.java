@@ -54,7 +54,7 @@ public interface CompteCourantServiceRemote {
      * Récupère les transactions d'un compte avec type d'opération via JOIN optimisé
      * Évite les requêtes N+1 et les problèmes de sérialisation JPA
      */
-    List<com.banque.dto.TransactionTypeOperationDTO> getTransactionsAvecTypeOperationParCompte(Long compteId);
+    List<TransactionTypeOperationDTO> getTransactionsAvecTypeOperationParCompte(Long compteId);
     
     /**
      * Récupère la liste de tous les comptes courants (entités complètes)
