@@ -1,0 +1,38 @@
+COMPTE-COURANT
+liste ana transaction(mamorona dto -> amboarin tsara le izy)
+chercher un template plus beau et organiser (navbar) les fronts et bien verifier les controllers 
+optimiser les fichier fa bobaka lotra
+
+FLOW ANLE APPLICATION
+Tonga eo amin'ny acceuil (bouton vers la liste de client et bouton creer un client)
+Liste des clients (details anle client, liste de compte anle client)
+SIDEBAR : compte courant, compte de pret, compte de depot
+    COMPTES
+        compte courant  -> creer un compte misafidy client
+                -> liste des comptes courant avec les boutons de details, faire une nouvelle transaction, 
+        compte pret
+        compte depot
+    Actions Rapides 
+        faire une transaction 
+        creer un nouveau client
+        creer un nouveau compte (misafidy oe inona le compte)
+    Dashboard 
+        Solde total de la banque (nbr de client, nbr de compte, nbr de transaction)
+        Solde total du client dans la banque avec les details par compte (nbr transaction, solde)
+
+COMPTE PRET
+    - fonctionnalité de base (creer, liste, details)
+    - faire une transaction (rembourser, preter)
+    - liste des transactions (historique)
+    - calcul des interets (taux d'interet, interet a payer)
+    - BASE DE DONNEE
+        - type operation (preter, rembourser)
+        - compte_pret(id, client_id, solde, decouvert_autorise, taux_interet, date_creation, etat)
+        - transaction()
+    FLOW: 
+        il prete de l'argent -> on enregistre dans la transaction le montant prete et on augmente le solde du compte
+                            -> on enregistre dans la transaction l'interet a payer (solde * taux d'interet / 100)
+        il rembourse -> on enregistre dans la transaction le montant rembourse et on soustrait le solde du compte par le montant total paye - taux d'interet 
+
+
+ALEO ALO HANDINIKA

@@ -167,16 +167,4 @@ public class StatutCompteCourantMvtRepository {
         }
     }
 
-    /**
-     * Supprime un mouvement de statut par son ID
-     */
-    public boolean deleteById(Long id) {
-        StatutCompteCourantMvt mouvement = findById(id);
-        if (mouvement != null) {
-            delete(mouvement);
-            return true;
-        }
-        return false;
-    }
-
 }

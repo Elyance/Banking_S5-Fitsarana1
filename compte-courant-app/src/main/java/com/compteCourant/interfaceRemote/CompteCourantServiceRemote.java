@@ -3,6 +3,7 @@ package com.compteCourant.interfaceRemote;
 import com.compteCourant.entity.CompteCourant;
 import com.compteCourant.entity.Transaction;
 import com.banque.dto.CompteStatutDTO;
+import com.banque.dto.TransactionTypeOperationDTO;
 import jakarta.ejb.Remote;
 import java.math.BigDecimal;
 import java.util.List;
@@ -48,6 +49,12 @@ public interface CompteCourantServiceRemote {
      * Récupère la liste des transactions d'un compte avec pagination
      */
     List<Transaction> getTransactionsParCompte(Long compteId, int offset, int limit);
+    
+    /**
+     * Récupère les transactions d'un compte avec type d'opération via JOIN optimisé
+     * Évite les requêtes N+1 et les problèmes de sérialisation JPA
+     */
+    List<com.banque.dto.TransactionTypeOperationDTO> getTransactionsAvecTypeOperationParCompte(Long compteId);
     
     /**
      * Récupère la liste de tous les comptes courants (entités complètes)
@@ -96,16 +103,6 @@ public interface CompteCourantServiceRemote {
     boolean estEnDecouvert(Long compteId);
     
     /**
-     * Met à jour le découvert autorisé d'un compte
-     */
-    CompteCourant modifierDecouvertAutorise(Long compteId, BigDecimal nouveauDecouvert);
-    
-    /**
-     * Compte le nombre total de comptes
-     */
-    long getNombreTotalComptes();
-    
-    /**
      * Compte le nombre de transactions d'un compte
      */
     long getNombreTransactions(Long compteId);
@@ -114,10 +111,5 @@ public interface CompteCourantServiceRemote {
      * Récupère le statut actuel d'un compte
      */
     String getStatutActuelCompte(Long compteId);
-    
-    /**
-     * Vérifie si un client peut créer un nouveau compte
-     */
-    boolean clientPeutCreerNouveauCompte(Long clientId);
     
 }

@@ -3,8 +3,9 @@ package com.centralisateur.controller;
 import com.centralisateur.service.CompteCourantIntegrationService;
 import com.centralisateur.service.ClientService;
 import com.centralisateur.entity.Client;
+import com.centralisateur.dto.TransactionAffichageDTO;
+import com.banque.dto.TransactionTypeOperationDTO;
 import com.compteCourant.entity.CompteCourant;
-import com.compteCourant.entity.Transaction;
 import jakarta.inject.Inject;
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -68,19 +70,39 @@ public class ListeTransactionsController extends HttpServlet {
                 LOGGER.warning("Erreur lors de la récupération du client " + compte.getClientId() + ": " + e.getMessage());
             }
             
-            // Récupérer les transactions du compte
-            List<Transaction> transactions = compteCourantService.getTransactions(compteId);
-            LOGGER.info("Transactions récupérées: " + transactions.size());
+            // Récupérer les transactions avec type d'opération via JOIN optimisé
+            List<TransactionTypeOperationDTO> transactionsAvecTypeOperation = compteCourantService.getTransactionsAvecTypeOperation(compteId);
+            LOGGER.info("Transactions avec type d'opération récupérées: " + transactionsAvecTypeOperation.size());
+            
+            // Convertir en DTOs d'affichage enrichis
+            List<TransactionAffichageDTO> transactionsAffichage = new ArrayList<>();
+            for (TransactionTypeOperationDTO transactionDto : transactionsAvecTypeOperation) {
+                TransactionAffichageDTO dto = new TransactionAffichageDTO();
+                dto.setTransactionId(transactionDto.getTransactionId());
+                dto.setCompteId(transactionDto.getCompteCourantId());
+                dto.setNumeroCompte(compte.getNumeroCompte());
+                dto.setTypeOperationId(transactionDto.getTypeOperationId());
+                dto.setTypeOperationLibelle(transactionDto.getTypeOperationLibelle());
+                dto.setMontant(transactionDto.getMontant());
+                dto.setDescription(transactionDto.getDescription());
+                dto.setReferenceExterne(transactionDto.getReferenceAffichage());
+                dto.setDateTransaction(transactionDto.getDateTransaction());
+                
+                // Le DTO calcule automatiquement les propriétés d'affichage
+                transactionsAffichage.add(dto);
+            }
+            
+            LOGGER.info("DTOs d'affichage créés: " + transactionsAffichage.size());
             
             // Ajouter les données à la requête
             request.setAttribute("compte", compte);
             request.setAttribute("nomClient", nomClient);
             request.setAttribute("prenomClient", prenomClient);
-            request.setAttribute("transactions", transactions);
-            request.setAttribute("nombreTransactions", transactions.size());
+            request.setAttribute("transactions", transactionsAffichage);
+            request.setAttribute("nombreTransactions", transactionsAffichage.size());
             request.setAttribute("pageTitle", "Transactions du compte " + compte.getNumeroCompte());
 
-            LOGGER.info("=== Envoi vers JSP transactions: " + transactions.size() + " transactions ===");
+            LOGGER.info("=== Envoi vers JSP transactions: " + transactionsAffichage.size() + " transactions ===");
 
             // Rediriger vers la page de transactions
             request.getRequestDispatcher("/compte_courant/transactions.jsp").forward(request, response);

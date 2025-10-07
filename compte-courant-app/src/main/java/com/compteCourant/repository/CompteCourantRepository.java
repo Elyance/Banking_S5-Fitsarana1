@@ -125,18 +125,6 @@ public class CompteCourantRepository {
     }
 
     /**
-     * Supprime un compte par son ID
-     */
-    public boolean deleteById(Long id) {
-        CompteCourant compte = findById(id);
-        if (compte != null) {
-            delete(compte);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Vérifie si un compte existe par son ID
      */
     public boolean existsById(Long id) {

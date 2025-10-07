@@ -4,6 +4,7 @@ import com.compteCourant.interfaceRemote.CompteCourantServiceRemote;
 import com.compteCourant.entity.CompteCourant;
 import com.compteCourant.entity.Transaction;
 import com.banque.dto.CompteStatutDTO;
+import com.banque.dto.TransactionTypeOperationDTO;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
@@ -95,6 +96,18 @@ public class CompteCourantIntegrationService {
             return compteCourantService.getTransactionsParCompte(compteId);
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de la récupération des transactions: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Récupère les transactions d'un compte avec type d'opération via JOIN optimisé
+     * Évite les requêtes N+1 et les problèmes de sérialisation JPA
+     */
+    public List<TransactionTypeOperationDTO> getTransactionsAvecTypeOperation(Long compteId) {
+        try {
+            return compteCourantService.getTransactionsAvecTypeOperationParCompte(compteId);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la récupération des transactions avec type d'opération: " + e.getMessage(), e);
         }
     }
 
@@ -213,28 +226,6 @@ public class CompteCourantIntegrationService {
     }
 
     /**
-     * Modifie le découvert autorisé d'un compte
-     */
-    public CompteCourant modifierDecouvertAutorise(Long compteId, BigDecimal nouveauDecouvert) {
-        try {
-            return compteCourantService.modifierDecouvertAutorise(compteId, nouveauDecouvert);
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la modification du découvert: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Compte le nombre total de comptes
-     */
-    public long getNombreTotalComptes() {
-        try {
-            return compteCourantService.getNombreTotalComptes();
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors du comptage des comptes: " + e.getMessage(), e);
-        }
-    }
-
-    /**
      * Compte le nombre de transactions d'un compte
      */
     public long getNombreTransactions(Long compteId) {
@@ -256,14 +247,4 @@ public class CompteCourantIntegrationService {
         }
     }
     
-    /**
-     * Vérifie si un client peut créer un nouveau compte
-     */
-    public boolean clientPeutCreerNouveauCompte(Long clientId) {
-        try {
-            return compteCourantService.clientPeutCreerNouveauCompte(clientId);
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la vérification des comptes du client: " + e.getMessage(), e);
-        }
-    }
 }

@@ -6,6 +6,7 @@ import com.compteCourant.entity.StatutCompteCourantMvt;
 import com.compteCourant.entity.Transaction;
 import com.compteCourant.entity.TypeOperation;
 import com.banque.dto.CompteStatutDTO;
+import com.banque.dto.TransactionTypeOperationDTO;
 import com.compteCourant.repository.CompteCourantRepository;
 import com.compteCourant.repository.StatutCompteRepository;
 import com.compteCourant.repository.StatutCompteCourantMvtRepository;
@@ -288,6 +289,19 @@ public class CompteCourantService implements CompteCourantServiceRemote {
     }
 
     /**
+     * Récupère les transactions d'un compte avec type d'opération via JOIN optimisé
+     * Évite les requêtes N+1 et les problèmes de sérialisation JPA
+     */
+    public List<com.banque.dto.TransactionTypeOperationDTO> getTransactionsAvecTypeOperationParCompte(Long compteId) {
+        CompteCourant compte = compteCourantRepository.findById(compteId);
+        if (compte == null) {
+            throw new IllegalArgumentException("Compte introuvable avec l'ID : " + compteId);
+        }
+
+        return transactionRepository.findTransactionsAvecTypeOperationByCompteCourantId(compteId);
+    }
+
+    /**
      * Récupère la liste de tous les comptes courants
      */
     public List<CompteCourant> getTousLesComptes() {
@@ -437,32 +451,6 @@ public class CompteCourantService implements CompteCourantServiceRemote {
     }
 
     /**
-     * Met à jour le découvert autorisé d'un compte
-     */
-    @Transactional
-    public CompteCourant modifierDecouvertAutorise(Long compteId, BigDecimal nouveauDecouvert) {
-        CompteCourant compte = compteCourantRepository.findById(compteId);
-        if (compte == null) {
-            throw new IllegalArgumentException("Compte introuvable avec l'ID : " + compteId);
-        }
-
-        if (nouveauDecouvert == null || nouveauDecouvert.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Le découvert autorisé ne peut pas être négatif");
-        }
-
-        compte.setDecouvertAutorise(nouveauDecouvert);
-        compte.setDateModification(LocalDateTime.now());
-        return compteCourantRepository.save(compte);
-    }
-
-    /**
-     * Compte le nombre total de comptes
-     */
-    public long getNombreTotalComptes() {
-        return compteCourantRepository.count();
-    }
-
-    /**
      * Compte le nombre de transactions d'un compte
      */
     public long getNombreTransactions(Long compteId) {
@@ -479,13 +467,6 @@ public class CompteCourantService implements CompteCourantServiceRemote {
      */
     public String getStatutActuelCompte(Long compteId) {
         return compteCourantRepository.getStatutActuelCompte(compteId);
-    }
-    
-    /**
-     * Vérifie si un client peut créer un nouveau compte
-     */
-    public boolean clientPeutCreerNouveauCompte(Long clientId) {
-        return !compteCourantRepository.clientADesComptesActifsOuSuspendus(clientId);
     }
    
 }

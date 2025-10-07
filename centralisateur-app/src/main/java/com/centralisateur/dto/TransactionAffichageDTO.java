@@ -127,7 +127,7 @@ public class TransactionAffichageDTO {
     }
     
     public String getReferenceAffichage() {
-        return referenceExterne != null && !referenceExterne.isEmpty() ? referenceExterne : "N/A";
+        return referenceExterne != null && !referenceExterne.isEmpty() ? referenceExterne : "TXN-" + transactionId;
     }
     
     public String getClasseCss() {
