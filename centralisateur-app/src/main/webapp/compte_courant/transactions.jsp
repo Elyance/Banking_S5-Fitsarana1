@@ -1,401 +1,550 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transactions - Banque Centralisateur</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+
+<style>
+    .page-container {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border-light);
+    }
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .page-subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+
+    .compte-info {
+        background: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-lg);
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+    }
+
+    .compte-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 0;
+    }
+
+    .info-card {
+        padding: 1.5rem;
+        border-right: 1px solid var(--border-light);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .info-card:last-child {
+        border-right: none;
+    }
+
+    .info-label {
+        font-weight: 500;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-value {
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .transactions-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding: 1.5rem 2rem;
+        background: var(--bg-white);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-light);
+    }
+
+    .transactions-title {
+        color: var(--text-primary);
+        font-size: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .transactions-count {
+        background: var(--success-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+
+    .transactions-table-container {
+        background: var(--bg-white);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-light);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .transactions-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .transactions-table th {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.875rem;
+        border-bottom: 2px solid var(--border-light);
+    }
+
+    .transactions-table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-light);
+        vertical-align: middle;
+    }
+
+    .transactions-table tr:nth-child(even) {
+        background: var(--bg-light);
+    }
+
+    .transactions-table tr:hover {
+        background: var(--bg-primary);
+        transition: all var(--transition-fast);
+    }
+
+    .transactions-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .transaction-depot {
+        color: var(--success-color);
+        font-weight: 600;
+    }
+
+    .transaction-retrait {
+        color: var(--danger-color);
+        font-weight: 600;
+    }
+
+    .montant-positif {
+        color: var(--success-color);
+        font-weight: 700;
+    }
+
+    .montant-negatif {
+        color: var(--danger-color);
+        font-weight: 700;
+    }
+
+    .montant-neutre {
+        color: var(--text-secondary);
+        font-weight: 600;
+    }
+
+    .transaction-montant {
+        font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+        font-size: 1rem;
+        text-align: right;
+    }
+
+    .transaction-description {
+        color: var(--text-secondary);
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-style: italic;
+    }
+
+    .transaction-date {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .transaction-type {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+    }
+
+    .transaction-reference {
+        color: var(--text-secondary);
+        font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+        font-size: 0.75rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-secondary);
+        background: var(--bg-white);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-light);
+        margin-bottom: 2rem;
+    }
+
+    .empty-state h4 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .empty-state p {
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding: 2rem;
+        background: var(--bg-white);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-light);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        text-decoration: none;
+        border-radius: var(--radius-sm);
+        font-weight: 500;
+        transition: all var(--transition-fast);
+        border: none;
+        cursor: pointer;
+        font-size: 0.875rem;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        text-decoration: none;
+        color: white;
+    }
+
+    .btn-secondary {
+        background: var(--bg-light);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        text-decoration: none;
+    }
+
+    .btn-success {
+        background: var(--success-color);
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #059669;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        text-decoration: none;
+        color: white;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: var(--radius-sm);
+        margin-bottom: 2rem;
+        border: 1px solid transparent;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .alert-danger {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.2);
+        color: var(--danger-color);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 1rem;
         }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        
-        .header .subtitle {
-            opacity: 0.9;
-            font-size: 1.1em;
-        }
-        
-        .compte-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-bottom: 2px solid #eee;
-        }
-        
+
         .compte-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: 1fr;
         }
-        
+
         .info-card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #4CAF50;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-right: none;
+            border-bottom: 1px solid var(--border-light);
         }
-        
-        .info-label {
-            font-weight: 600;
-            color: #555;
-            font-size: 0.9em;
-            margin-bottom: 5px;
+
+        .info-card:last-child {
+            border-bottom: none;
         }
-        
-        .info-value {
-            font-size: 1.1em;
-            color: #333;
-            font-weight: 500;
-        }
-        
-        .content {
-            padding: 30px;
-        }
-        
+
         .transactions-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eee;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+            padding: 1rem;
         }
-        
-        .transactions-header h3 {
-            color: #333;
-            font-size: 1.5em;
-        }
-        
-        .transactions-count {
-            background: #4CAF50;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 500;
-        }
-        
+
         .transactions-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
+            font-size: 0.875rem;
         }
-        
-        .transactions-table th {
-            background: #4CAF50;
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.95em;
-        }
-        
+
+        .transactions-table th,
         .transactions-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
+            padding: 0.75rem 0.5rem;
         }
-        
-        .transactions-table tr:nth-child(even) {
-            background: #f8f9fa;
-        }
-        
-        .transactions-table tr:hover {
-            background: #e8f5e8;
-            transform: scale(1.01);
-            transition: all 0.2s ease;
-        }
-        
-        .transaction-depot {
-            color: #4CAF50;
-            font-weight: bold;
-        }
-        
-        .transaction-retrait {
-            color: #f44336;
-            font-weight: bold;
-        }
-        
-        .transaction-credit {
-            background: #f8f9fa;
-        }
-        
-        .transaction-debit {
-            background: #fff5f5;
-        }
-        
-        .transaction-neutre {
-            background: #f8f9fa;
-        }
-        
-        .montant-positif {
-            color: #4CAF50;
-            font-weight: bold;
-        }
-        
-        .montant-negatif {
-            color: #f44336;
-            font-weight: bold;
-        }
-        
-        .montant-neutre {
-            color: #666;
-            font-weight: bold;
-        }
-        
-        .transaction-montant {
-            font-family: 'Courier New', monospace;
-            font-size: 1.1em;
-            text-align: right;
-        }
-        
+
         .transaction-description {
-            font-style: italic;
-            color: #666;
-            max-width: 200px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            max-width: 150px;
         }
-        
-        .transaction-date {
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #666;
-        }
-        
-        .empty-state h4 {
-            font-size: 1.3em;
-            margin-bottom: 10px;
-            color: #999;
-        }
-        
+
         .actions {
-            text-align: center;
-            padding: 20px 0;
-            border-top: 2px solid #eee;
+            flex-direction: column;
+            padding: 1rem;
         }
-        
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            margin: 0 10px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1em;
+    }
+
+    @media (max-width: 480px) {
+        .transactions-table th:nth-child(4),
+        .transactions-table td:nth-child(4),
+        .transactions-table th:nth-child(5),
+        .transactions-table td:nth-child(5) {
+            display: none;
         }
-        
-        .btn-primary {
-            background: #4CAF50;
-            color: white;
+
+        .transaction-montant {
+            font-size: 0.875rem;
         }
-        
-        .btn-primary:hover {
-            background: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-        }
-        
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
-        }
-        
-        .error {
-            background: #ffebee;
-            color: #c62828;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #f44336;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 10px;
-            }
-            
-            .content {
-                padding: 20px;
-            }
-            
-            .compte-details {
-                grid-template-columns: 1fr;
-            }
-            
-            .transactions-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .transactions-table {
-                font-size: 0.9em;
-            }
-            
-            .transactions-table th,
-            .transactions-table td {
-                padding: 8px 10px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>📊 Historique des Transactions</h1>
-            <div class="subtitle">Relevé détaillé des opérations</div>
+    }
+</style>
+
+<div class="page-container">
+    <!-- En-tête de page -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-history"></i>
+            Historique des Transactions
+        </h1>
+        <p class="page-subtitle">Relevé détaillé des opérations du compte</p>
+    </div>
+
+    <c:if test="${not empty compte}">
+        <!-- Informations du compte -->
+        <div class="compte-info">
+            <div class="compte-details">
+                <div class="info-card">
+                    <div class="info-label">
+                        <i class="fas fa-hashtag"></i>
+                        Numéro de compte
+                    </div>
+                    <div class="info-value">${compte.numeroCompte}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">
+                        <i class="fas fa-user"></i>
+                        Titulaire
+                    </div>
+                    <div class="info-value">${prenomClient} ${nomClient}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">
+                        <i class="fas fa-euro-sign"></i>
+                        Solde actuel
+                    </div>
+                    <div class="info-value">
+                        <fmt:formatNumber value="${compte.solde}" type="currency" currencySymbol="€"/>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">
+                        <i class="fas fa-wallet"></i>
+                        Solde disponible
+                    </div>
+                    <div class="info-value">
+                        <fmt:formatNumber value="${compte.solde + compte.decouvertAutorise}" type="currency" currencySymbol="€"/>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <c:if test="${not empty compte}">
-            <div class="compte-info">
-                <div class="compte-details">
-                    <div class="info-card">
-                        <div class="info-label">Numéro de compte</div>
-                        <div class="info-value">${compte.numeroCompte}</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-label">Titulaire</div>
-                        <div class="info-value">${prenomClient} ${nomClient}</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-label">Solde actuel</div>
-                        <div class="info-value">
-                            <fmt:formatNumber value="${compte.solde}" type="currency" currencySymbol="€"/>
-                        </div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-label">Solde disponible</div>
-                        <div class="info-value">
-                            <fmt:formatNumber value="${compte.solde + compte.decouvertAutorise}" type="currency" currencySymbol="€"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </c:if>
-        
-        <div class="content">
-            <c:if test="${not empty error}">
-                <div class="error">
-                    <strong>Erreur :</strong> ${error}
-                </div>
-            </c:if>
-            
-            <div class="transactions-header">
-                <h3>📋 Liste des Transactions</h3>
-                <div class="transactions-count">
-                    ${nombreTransactions} transaction(s)
-                </div>
-            </div>
-            
-            <c:choose>
-                <c:when test="${empty transactions}">
-                    <div class="empty-state">
-                        <h4>🔍 Aucune transaction trouvée</h4>
-                        <p>Il n'y a aucune transaction enregistrée pour ce compte.</p>
-                        <p>Les nouvelles opérations apparaîtront ici.</p>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <table class="transactions-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Montant</th>
-                                <th>Description</th>
-                                <th>Référence</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="transaction" items="${transactions}">
-                                <tr class="${transaction.classeCss}">
-                                    <td class="transaction-date">
-                                        ${transaction.dateTransactionFormatee}
-                                    </td>
-                                    <td>
-                                        <span style="color: '${transaction.typeOperationCouleur}'">
-                                            ${transaction.typeOperationIcone} ${transaction.typeOperationLibelle}
-                                        </span>
-                                    </td>
-                                    <td class="transaction-montant ${transaction.classeMontant}">
-                                        ${transaction.montantAvecSigne}
-                                    </td>
-                                    <td class="transaction-description" title="${transaction.descriptionComplete}">
-                                        ${transaction.descriptionCourte}
-                                    </td>
-                                    <td>
-                                        ${transaction.referenceAffichage}
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </c:otherwise>
-            </c:choose>
-            
-            <div class="actions">
-                <a href="${pageContext.request.contextPath}/compte-courant/detail?id=${compte.id}" class="btn btn-secondary">
-                    ← Retour aux détails
-                </a>
-                <a href="${pageContext.request.contextPath}/compte-courant/transaction?compteId=${compte.id}" class="btn btn-primary">
-                    💰 Nouvelle transaction
-                </a>
-                <a href="${pageContext.request.contextPath}/compte-courant/liste" class="btn btn-secondary">
-                    📋 Liste des comptes
-                </a>
-            </div>
+    </c:if>
+
+    <!-- Messages d'erreur -->
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Erreur :</strong> ${error}
+        </div>
+    </c:if>
+
+    <!-- En-tête des transactions -->
+    <div class="transactions-header">
+        <h3 class="transactions-title">
+            <i class="fas fa-list"></i>
+            Liste des Transactions
+        </h3>
+        <div class="transactions-count">
+            <i class="fas fa-calculator"></i>
+            ${nombreTransactions} transaction(s)
         </div>
     </div>
-</body>
-</html>
+
+    <c:choose>
+        <c:when test="${empty transactions}">
+            <!-- État vide -->
+            <div class="empty-state">
+                <h4>
+                    <i class="fas fa-search"></i>
+                    Aucune transaction trouvée
+                </h4>
+                <p>Il n'y a aucune transaction enregistrée pour ce compte.</p>
+                <p>Les nouvelles opérations apparaîtront ici automatiquement.</p>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <!-- Tableau des transactions -->
+            <div class="transactions-table-container">
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <i class="fas fa-calendar"></i>
+                                Date
+                            </th>
+                            <th>
+                                <i class="fas fa-tag"></i>
+                                Type
+                            </th>
+                            <th>
+                                <i class="fas fa-euro-sign"></i>
+                                Montant
+                            </th>
+                            <th>
+                                <i class="fas fa-comment"></i>
+                                Description
+                            </th>
+                            <th>
+                                <i class="fas fa-barcode"></i>
+                                Référence
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="transaction" items="${transactions}">
+                            <tr>
+                                <td class="transaction-date">
+                                    <i class="fas fa-clock"></i>
+                                    ${transaction.dateTransactionFormatee}
+                                </td>
+                                <td class="transaction-type">
+                                    <c:choose>
+                                        <c:when test="${transaction.typeOperationLibelle == 'Dépôt'}">
+                                            <i class="fas fa-plus-circle" style="color: var(--success-color);"></i>
+                                            <span class="transaction-depot">${transaction.typeOperationLibelle}</span>
+                                        </c:when>
+                                        <c:when test="${transaction.typeOperationLibelle == 'Retrait'}">
+                                            <i class="fas fa-minus-circle" style="color: var(--danger-color);"></i>
+                                            <span class="transaction-retrait">${transaction.typeOperationLibelle}</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <i class="fas fa-exchange-alt"></i>
+                                            <span>${transaction.typeOperationLibelle}</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td class="transaction-montant ${transaction.classeMontant}">
+                                    ${transaction.montantAvecSigne}
+                                </td>
+                                <td class="transaction-description" title="${transaction.descriptionComplete}">
+                                    <c:choose>
+                                        <c:when test="${not empty transaction.descriptionCourte}">
+                                            <i class="fas fa-sticky-note"></i>
+                                            ${transaction.descriptionCourte}
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span style="color: var(--text-muted);">
+                                                <i class="fas fa-minus"></i>
+                                                Aucune description
+                                            </span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td class="transaction-reference">
+                                    ${transaction.referenceAffichage}
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </c:otherwise>
+    </c:choose>
+
+    <!-- Actions -->
+    <div class="actions">
+        <a href="${pageContext.request.contextPath}/compte-courant/detail?id=${compte.id}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Retour aux détails
+        </a>
+        <a href="${pageContext.request.contextPath}/compte-courant/transaction?compteId=${compte.id}" class="btn btn-success">
+            <i class="fas fa-plus"></i>
+            Nouvelle transaction
+        </a>
+        <a href="${pageContext.request.contextPath}/compte-courant/liste" class="btn btn-secondary">
+            <i class="fas fa-list"></i>
+            Liste des comptes
+        </a>
+    </div>
+</div>

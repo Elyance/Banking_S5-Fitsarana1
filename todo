@@ -1,7 +1,5 @@
 COMPTE-COURANT
-liste ana transaction(mamorona dto -> amboarin tsara le izy)
-chercher un template plus beau et organiser (navbar) les fronts et bien verifier les controllers 
-optimiser les fichier fa bobaka lotra
+- filtre liste de client 
 
 FLOW ANLE APPLICATION
 Tonga eo amin'ny acceuil (bouton vers la liste de client et bouton creer un client)

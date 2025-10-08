@@ -288,14 +288,14 @@
                 </a>
             </div>
             <div class="col-md-3">
-                <a href="${pageContext.request.contextPath}/compte-courant/creation" 
+                <a href="${pageContext.request.contextPath}/compte-courant/creer" 
                    class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
                     <i class="fas fa-plus-circle fa-2x mb-2"></i>
                     <span class="fw-semibold">Nouveau Compte</span>
                 </a>
             </div>
             <div class="col-md-3">
-                <a href="${pageContext.request.contextPath}/transaction/nouvelle" 
+                <a href="${pageContext.request.contextPath}/compte-courant/transaction" 
                    class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
                     <i class="fas fa-exchange-alt fa-2x mb-2"></i>
                     <span class="fw-semibold">Transaction</span>

@@ -19,9 +19,9 @@ import java.util.logging.Logger;
  * Contrôleur pour la création de comptes courants
  */
 @WebServlet("/compte-courant/creer")
-public class CreationCompteController extends HttpServlet {
+public class CreationCompteCourantController extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(CreationCompteController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CreationCompteCourantController.class.getName());
 
     @Inject
     private ClientService clientService;
@@ -30,7 +30,7 @@ public class CreationCompteController extends HttpServlet {
     private CompteCourantIntegrationService compteCourantService;
 
     /**
-     * Affiche le formulaire de création de compte courant
+     * Affiche le formulaire de création de compte généralisé
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -41,15 +41,19 @@ public class CreationCompteController extends HttpServlet {
             List<Client> clients = clientService.getAllClients();
             request.setAttribute("clients", clients);
 
-            LOGGER.info("Affichage du formulaire de création de compte courant. Nombre de clients : " + clients.size());
+            LOGGER.info("Affichage du formulaire de création de compte généralisé. Nombre de clients : " + clients.size());
 
-            // Rediriger vers la page de création
-            request.getRequestDispatcher("/compte_courant/creation-compte.jsp").forward(request, response);
+            // Utiliser le nouveau JSP généralisé avec le layout
+            request.setAttribute("pageTitle", "Création de Compte Courant");
+            request.setAttribute("contentPage", "/compte_courant/creation.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
             
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Erreur lors de l'affichage du formulaire de création de compte", e);
             request.setAttribute("error", "Erreur lors du chargement des données : " + e.getMessage());
-            request.getRequestDispatcher("/compte_courant/creation-compte.jsp").forward(request, response);
+            request.setAttribute("pageTitle", "Erreur - Création de Compte Courant");
+            request.setAttribute("contentPage", "/compte_courant/creation.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);    
         }
     }
 
@@ -130,8 +134,10 @@ public class CreationCompteController extends HttpServlet {
             List<Client> clients = clientService.getAllClients();
             request.setAttribute("clients", clients);
 
-            // Rediriger vers la page avec le message de succès
-            request.getRequestDispatcher("/compte_courant/creation-compte.jsp").forward(request, response);
+            // Rediriger vers la page avec le message de succès en utilisant le layout
+            request.setAttribute("pageTitle", "Création de Compte - Succès");
+            request.setAttribute("contentPage", "/compte_courant/creation.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
 
         } catch (IllegalArgumentException e) {
             // Erreurs de validation
@@ -146,7 +152,9 @@ public class CreationCompteController extends HttpServlet {
                 LOGGER.log(Level.SEVERE, "Erreur lors du rechargement des clients", ex);
             }
 
-            request.getRequestDispatcher("/compte_courant/creation-compte.jsp").forward(request, response);
+            request.setAttribute("pageTitle", "Erreur - Création de Compte");
+            request.setAttribute("contentPage", "/compte_courant/creation.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
 
         } catch (Exception e) {
             // Erreurs techniques
@@ -167,7 +175,9 @@ public class CreationCompteController extends HttpServlet {
                 LOGGER.log(Level.SEVERE, "Erreur lors du rechargement des clients", ex);
             }
 
-            request.getRequestDispatcher("/compte_courant/creation-compte.jsp").forward(request, response);
+            request.setAttribute("pageTitle", "Erreur - Création de Compte");
+            request.setAttribute("contentPage", "/compte_courant/creation.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
         }
     }
 }

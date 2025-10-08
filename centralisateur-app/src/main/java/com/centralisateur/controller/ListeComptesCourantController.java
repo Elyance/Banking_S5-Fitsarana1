@@ -21,9 +21,9 @@ import java.util.logging.Logger;
  * Contrôleur pour l'affichage professionnel de la liste des comptes courants
  */
 @WebServlet("/compte-courant/liste")
-public class ListeComptesController extends HttpServlet {
+public class ListeComptesCourantController extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(ListeComptesController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ListeComptesCourantController.class.getName());
 
     @Inject
     private CompteCourantIntegrationService compteCourantService;
@@ -97,15 +97,21 @@ public class ListeComptesController extends HttpServlet {
 
             LOGGER.info("=== Envoi vers JSP: " + comptesAffichage.size() + " comptes avec JOIN optimisé ===");
 
-            // Rediriger vers la page de liste
-            request.getRequestDispatcher("/compte_courant/liste.jsp").forward(request, response);
+            // Utiliser le layout principal pour la page de liste
+            request.setAttribute("pageTitle", "Liste des Comptes Courants");
+            request.setAttribute("contentPage", "/compte_courant/liste.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
             
         } catch (Exception e) {
-            LOGGER.severe("Erreur lors du chargement de la liste des comptes : " + e.getMessage());
+            LOGGER.severe("Erreur lors du chargement de la liste des comptes courants: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "Erreur lors du chargement de la liste des comptes : " + e.getMessage());
+            request.setAttribute("error", "Erreur lors du chargement de la liste des comptes courants : " + e.getMessage());
             request.setAttribute("comptes", new ArrayList<>());
-            request.getRequestDispatcher("/compte_courant/liste.jsp").forward(request, response);
+            
+            // Utiliser le layout principal même en cas d'erreur
+            request.setAttribute("pageTitle", "Erreur - Liste des Comptes courants");
+            request.setAttribute("contentPage", "/compte_courant/liste.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
         }
     }
 

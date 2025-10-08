@@ -3,6 +3,9 @@ package com.comptePret.service;
 import com.comptePret.entity.*;
 import com.comptePret.interfaceRemote.ComptePretServiceRemote;
 import com.comptePret.repository.*;
+import com.banque.dto.ComptePretStatutDTO;
+import com.banque.dto.TypePaiementDTO;
+import java.util.ArrayList;
 import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -10,7 +13,6 @@ import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -43,21 +45,55 @@ public class ComptePretService implements ComptePretServiceRemote {
                                      BigDecimal tauxInteret, Integer dureeTotaleMois, LocalDate dateDebut,
                                      Long typePaiementId) {
         
+
+                                        
         // Vérifications préalables
+        if (numeroCompte == null || numeroCompte.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le numéro de compte ne peut pas être vide");
+        }
+
         if (comptePretRepository.existsByNumeroCompte(numeroCompte)) {
             throw new IllegalArgumentException("Le numéro de compte " + numeroCompte + " existe déjà");
         }
 
+        if (clientId == null) {
+            throw new IllegalArgumentException("L'identifiant du client ne peut pas être nul");
+        }
+
+        if (montantEmprunte == null) {
+            throw new IllegalArgumentException("Le montant emprunté ne peut pas être nul");
+        }
+
         if (montantEmprunte.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Le montant emprunté doit être positif");
+            throw new IllegalArgumentException("Le montant emprunté (" + montantEmprunte + 
+                " €) doit être supérieur à 0");
+        }
+
+        if (tauxInteret == null) {
+            throw new IllegalArgumentException("Le taux d'intérêt ne peut pas être nul");
         }
 
         if (tauxInteret.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Le taux d'intérêt ne peut pas être négatif");
+            throw new IllegalArgumentException("Le taux d'intérêt (" + tauxInteret + 
+                " %) ne peut pas être négatif");
+        }
+
+        if (dureeTotaleMois == null) {
+            throw new IllegalArgumentException("La durée ne peut pas être nulle");
         }
 
         if (dureeTotaleMois <= 0) {
-            throw new IllegalArgumentException("La durée doit être positive");
+            throw new IllegalArgumentException("La durée (" + dureeTotaleMois + 
+                " mois) doit être supérieure à 0");
+        }
+
+        if (dateDebut == null) {
+            throw new IllegalArgumentException("La date de début ne peut pas être nulle");
+        }
+
+        if (dateDebut.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("La date de début (" + dateDebut + 
+                ") ne peut pas être antérieure à la date du jour");
         }
 
         // Création du compte prêt
@@ -126,17 +162,24 @@ public class ComptePretService implements ComptePretServiceRemote {
         }
 
         // Vérifications des montants
+        if (montant == null) {
+            throw new IllegalArgumentException("Le montant ne peut pas être nul");
+        }
+
         if (montant.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Les montants ne peuvent pas être négatifs");
+            throw new IllegalArgumentException("Le montant du remboursement ne peut pas être négatif");
         }
 
         if (montant.compareTo(comptePret.getSoldeRestantDu()) > 0) {
-            throw new IllegalArgumentException("Le montant ne peut pas dépasser le solde restant dû");
+            throw new IllegalArgumentException("Le montant du remboursement (" + montant + 
+                " €) ne peut pas dépasser le solde restant dû (" + comptePret.getSoldeRestantDu() + " €)");
         }
 
-        BigDecimal montantCapital = calculerMensualiteSansInteret(comptePret.getMontantEmprunte(), comptePret.getTauxInteret(), comptePret.getDureeTotaleMois());
+        BigDecimal montantCapital = calculerMensualiteSansInteret(comptePret.getMontantEmprunte(), 
+            comptePret.getTauxInteret(), comptePret.getDureeTotaleMois());
         if (montant.compareTo(montantCapital) < 0) {
-            throw new IllegalArgumentException("Le montant doit être superieur a la mensualite convenue");
+            throw new IllegalArgumentException("Le montant du remboursement (" + montant + 
+                " €) doit être au moins égal à la mensualité convenue (" + montantCapital + " €)");
         }
 
         BigDecimal montantInteret = montant.subtract(montantCapital);
@@ -377,5 +420,56 @@ public class ComptePretService implements ComptePretServiceRemote {
      */
     public boolean isComptePretFerme(Long comptePretId) {
         return hasStatut(comptePretId, 3L);
+    }
+
+    /**
+     * Récupère tous les types de paiement disponibles
+     */
+    @Override
+    public List<TypePaiementDTO> getAllTypesPaiement() {
+        List<TypePaiement> typePaiements = typePaiementRepository.findAll();
+        List<TypePaiementDTO> dtos = new ArrayList<>();
+
+        for (TypePaiement tp : typePaiements) {
+            TypePaiementDTO dto = new TypePaiementDTO();
+            dto.setId(tp.getId());
+            dto.setLibelle(tp.getLibelle());
+            dto.setValeur(tp.getValeur());
+            dto.setDescription(tp.getDescription());
+            dtos.add(dto);
+        }
+
+        return dtos;
+    }
+
+    /**
+     * Récupère tous les comptes prêts avec leurs types de paiement et statuts via JOIN
+     */
+    @Override
+    public List<ComptePretStatutDTO> getAllComptePretWithTypeAndStatut() {
+        List<Object[]> results = comptePretRepository.findAllWithTypeAndStatut();
+        List<ComptePretStatutDTO> dtos = new ArrayList<>();
+
+        for (Object[] result : results) {
+            ComptePretStatutDTO dto = new ComptePretStatutDTO();
+            
+            // Mapping des résultats vers le DTO
+            dto.setCompteId((Long) result[0]);
+            dto.setNumeroCompte((String) result[1]);
+            dto.setClientId((Long) result[2]);
+            dto.setMontantEmprunte((BigDecimal) result[3]);
+            dto.setSoldeRestantDu((BigDecimal) result[4]);
+            dto.setTauxInteret((BigDecimal) result[5]);
+            dto.setDureeTotaleMois((Integer) result[6]);
+            dto.setDateDebut((LocalDate) result[7]);
+            dto.setDateFinTheorique((LocalDate) result[8]);
+            dto.setTypePaiementLibelle((String) result[9]);
+            dto.setStatutId((Long) result[10]);
+            dto.setStatutLibelle((String) result[11]);
+
+            dtos.add(dto);
+        }
+
+        return dtos;
     }
 }

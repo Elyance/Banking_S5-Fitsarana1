@@ -2,6 +2,8 @@ package com.comptePret.interfaceRemote;
 
 import com.comptePret.entity.ComptePret;
 import com.comptePret.entity.Remboursement;
+import com.banque.dto.ComptePretStatutDTO;
+import com.banque.dto.TypePaiementDTO;
 import jakarta.ejb.Remote;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -135,4 +137,14 @@ public interface ComptePretServiceRemote {
      * Calcule la mensualité théorique d'un prêt
      */
     BigDecimal calculerMensualiteSansInteret(BigDecimal montant, BigDecimal tauxAnnuel, Integer dureeMois);
+    
+    /**
+     * Récupère tous les types de paiement disponibles
+     */
+    List<TypePaiementDTO> getAllTypesPaiement();
+
+    /**
+     * Récupère tous les comptes prêts avec leurs types de paiement et statuts via JOIN
+     */
+    List<ComptePretStatutDTO> getAllComptePretWithTypeAndStatut();
 }

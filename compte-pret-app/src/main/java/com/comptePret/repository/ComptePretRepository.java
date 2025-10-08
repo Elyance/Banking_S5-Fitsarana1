@@ -116,4 +116,30 @@ public class ComptePretRepository {
         query.setParameter("clientId", clientId);
         return query.getSingleResult();
     }
+
+    /**
+     * Récupère tous les comptes prêts avec leurs types de paiement et dernier statut via JOIN
+     */
+    public List<Object[]> findAllWithTypeAndStatut() {
+        String jpql = """
+            SELECT DISTINCT 
+                cp.id, cp.numeroCompte, cp.clientId, cp.montantEmprunte, cp.soldeRestantDu,
+                cp.tauxInteret, cp.dureeTotaleMois, cp.dateDebut, cp.dateFinTheorique,
+                tp.libelle,
+                ms.statutComptePret.id, ms.statutComptePret.libelle,
+                cp.dateCreation
+            FROM ComptePret cp
+            LEFT JOIN cp.typePaiement tp
+            LEFT JOIN cp.mouvementsStatut ms
+            WHERE ms.id IN (
+                SELECT MAX(ms2.id)
+                FROM MvtStatutComptePret ms2
+                WHERE ms2.comptePret = cp
+                GROUP BY ms2.comptePret
+            )
+            ORDER BY cp.dateCreation DESC
+            """;
+            
+        return em.createQuery(jpql).getResultList();
+    }
 }

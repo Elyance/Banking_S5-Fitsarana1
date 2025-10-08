@@ -106,22 +106,24 @@ public class DetailCompteController extends HttpServlet {
 
             LOGGER.info("=== Envoi vers JSP détail: compte " + compte.getNumeroCompte() + " ===");
 
-            // Rediriger vers la page de détail
-            request.getRequestDispatcher("/compte_courant/detail.jsp").forward(request, response);
+            // Utiliser le layout principal
+            request.setAttribute("pageTitle", "Détails du compte " + compte.getNumeroCompte());
+            request.setAttribute("contentPage", "/compte_courant/detail.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
             LOGGER.severe("Format d'ID invalide : " + e.getMessage());
             request.setAttribute("error", "Format d'ID invalide");
-            request.getRequestDispatcher("/compte_courant/liste").forward(request, response);
+            request.getRequestDispatcher("/compte-courant/liste").forward(request, response);
         } catch (IllegalArgumentException e) {
             LOGGER.severe("Erreur de paramètre : " + e.getMessage());
             request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("/compte_courant/liste").forward(request, response);
+            request.getRequestDispatcher("/compte-courant/liste").forward(request, response);
         } catch (Exception e) {
             LOGGER.severe("Erreur lors du chargement des détails du compte : " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "Erreur lors du chargement des détails du compte : " + e.getMessage());
-            request.getRequestDispatcher("/compte_courant/liste").forward(request, response);
+            request.getRequestDispatcher("/compte-courant/liste").forward(request, response);
         }
     }
 }

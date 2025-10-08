@@ -39,8 +39,10 @@ public class ClientDetailsController extends HttpServlet {
             
             request.setAttribute("client", client);
             request.setAttribute("statut", statut);
+            request.setAttribute("pageTitle", "Détails du client");
+            request.setAttribute("contentPage", "/client/client-details-content.jsp");
             
-            request.getRequestDispatcher("/client/client-details.jsp").forward(request, response);
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Format ID client invalide");

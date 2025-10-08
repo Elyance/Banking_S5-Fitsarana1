@@ -6,6 +6,8 @@ import com.banque.dto.CompteStatutDTO;
 import jakarta.ejb.Remote;
 import java.math.BigDecimal;
 import java.util.List;
+import com.banque.dto.TransactionTypeOperationDTO;
+import com.banque.dto.TypePaiementDTO;
 
 /**
  * Interface Remote pour le service CompteCourant
@@ -53,7 +55,7 @@ public interface CompteCourantServiceRemote {
      * Récupère les transactions d'un compte avec type d'opération via JOIN optimisé
      * Évite les requêtes N+1 et les problèmes de sérialisation JPA
      */
-    List<com.banque.dto.TransactionTypeOperationDTO> getTransactionsAvecTypeOperationParCompte(Long compteId);
+    List<TransactionTypeOperationDTO> getTransactionsAvecTypeOperationParCompte(Long compteId);
     
     /**
      * Récupère la liste de tous les comptes courants
@@ -110,4 +112,6 @@ public interface CompteCourantServiceRemote {
      * Récupère le statut actuel d'un compte
      */
     String getStatutActuelCompte(Long compteId);
+
+    List<TypePaiementDTO> getAllTypesPaiement();
 }

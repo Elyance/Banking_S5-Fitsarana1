@@ -26,8 +26,10 @@ public class ClientRegistrationController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        // Rediriger vers la page JSP du formulaire d'enregistrement
-        request.getRequestDispatcher("/client/client-registration.jsp").forward(request, response);
+        // Rediriger vers la page JSP du formulaire d'enregistrement avec le layout
+        request.setAttribute("pageTitle", "Nouveau Client");
+        request.setAttribute("contentPage", "/client/client-registration-content.jsp");
+        request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
     }
 
     @Override
@@ -95,8 +97,9 @@ public class ClientRegistrationController extends HttpServlet {
             request.setAttribute("client", clientEnregistre);
             request.setAttribute("message", "Le client " + clientEnregistre.getNomComplet() + 
                                " a été enregistré avec succès !");
-
-            request.getRequestDispatcher("/client/client-success.jsp").forward(request, response);
+            request.setAttribute("pageTitle", "Client créé avec succès");
+            request.setAttribute("contentPage", "/client/client-success-content.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
 
         } catch (IllegalArgumentException e) {
             // Erreur de validation - rediriger vers le formulaire avec les données et le message d'erreur
@@ -108,8 +111,9 @@ public class ClientRegistrationController extends HttpServlet {
             request.setAttribute("dateNaissance", request.getParameter("dateNaissance"));
             request.setAttribute("profession", request.getParameter("profession"));
             request.setAttribute("adresse", request.getParameter("adresse"));
-
-            request.getRequestDispatcher("/client/client-registration.jsp").forward(request, response);
+            request.setAttribute("pageTitle", "Nouveau Client");
+            request.setAttribute("contentPage", "/client/client-registration-content.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
             
         } catch (Exception e) {
             // Erreur technique - rediriger vers le formulaire avec un message générique
@@ -124,8 +128,9 @@ public class ClientRegistrationController extends HttpServlet {
             request.setAttribute("dateNaissance", request.getParameter("dateNaissance"));
             request.setAttribute("profession", request.getParameter("profession"));
             request.setAttribute("adresse", request.getParameter("adresse"));
-
-            request.getRequestDispatcher("/client/client-registration.jsp").forward(request, response);
+            request.setAttribute("pageTitle", "Nouveau Client");
+            request.setAttribute("contentPage", "/client/client-registration-content.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
         }
     }
 }

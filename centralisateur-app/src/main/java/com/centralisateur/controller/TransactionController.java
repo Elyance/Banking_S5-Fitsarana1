@@ -84,8 +84,10 @@ public class TransactionController extends HttpServlet {
 
             LOGGER.info("=== Envoi vers JSP transaction: compte " + compte.getNumeroCompte() + " ===");
 
-            // Rediriger vers la page de transaction
-            request.getRequestDispatcher("/compte_courant/transaction.jsp").forward(request, response);
+            // Utiliser le layout principal
+            request.setAttribute("pageTitle", "Transaction - Compte " + compte.getNumeroCompte());
+            request.setAttribute("contentPage", "/compte_courant/transaction.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
             LOGGER.severe("Format d'ID invalide : " + e.getMessage());

@@ -43,8 +43,9 @@ public class ClientEditController extends HttpServlet {
             // Passer les données du client au formulaire
             request.setAttribute("client", client);
             request.setAttribute("mode", "edit");
-            
-            request.getRequestDispatcher("/client/client-edit.jsp").forward(request, response);
+            request.setAttribute("pageTitle", "Modifier le client");
+            request.setAttribute("contentPage", "/client/client-edit-content.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Format ID client invalide");
@@ -141,8 +142,9 @@ public class ClientEditController extends HttpServlet {
             // Redirection vers la page de détails avec message de succès
             request.setAttribute("client", clientMisAJour);
             request.setAttribute("successMessage", "Les informations du client ont été mises à jour avec succès !");
-
-            request.getRequestDispatcher("/client/client-details.jsp").forward(request, response);
+            request.setAttribute("pageTitle", "Détails du client");
+            request.setAttribute("contentPage", "/client/client-details-content.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             handleEditError(request, response, "Format ID client invalide", request.getParameter("clientId"));
@@ -187,6 +189,8 @@ public class ClientEditController extends HttpServlet {
         request.setAttribute("mode", "edit");
 
         // Rediriger vers le formulaire d'édition
-        request.getRequestDispatcher("/client/client-edit.jsp").forward(request, response);
+        request.setAttribute("pageTitle", "Modifier le client");
+        request.setAttribute("contentPage", "/client/client-edit-content.jsp");
+        request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
     }
 }

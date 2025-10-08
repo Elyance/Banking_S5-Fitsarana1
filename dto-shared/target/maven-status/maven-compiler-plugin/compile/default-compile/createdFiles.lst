@@ -1,2 +1,4 @@
+com/banque/dto/TypePaiementDTO.class
+com/banque/dto/ComptePretStatutDTO.class
 com/banque/dto/CompteStatutDTO.class
 com/banque/dto/TransactionTypeOperationDTO.class
