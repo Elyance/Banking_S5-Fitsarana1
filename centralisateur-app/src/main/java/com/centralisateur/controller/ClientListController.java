@@ -32,60 +32,18 @@ public class ClientListController extends HttpServlet {
             
             request.setAttribute("clients", clients);
             request.setAttribute("totalClients", totalClients);
-            request.setAttribute("filtreApplique", false);
             
-            request.getRequestDispatcher("/client/client-list.jsp").forward(request, response);
+            request.setAttribute("pageTitle", "Liste des clients");
+            request.setAttribute("contentPage", "/client/client-list-content.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
             
         } catch (Exception e) {
             System.err.println("Erreur lors de la récupération des clients : " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "Erreur lors de la récupération des clients");
-            request.getRequestDispatcher("/client/client-list.jsp").forward(request, response);
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        
-        try {
-            // Récupération des filtres
-            String nomFiltre = request.getParameter("nomFiltre");
-            String emailFiltre = request.getParameter("emailFiltre");
-            String numeroClientFiltre = request.getParameter("numeroClientFiltre");
-            
-            List<Client> clients;
-            
-            // Appliquer les filtres
-            if (nomFiltre != null && !nomFiltre.trim().isEmpty()) {
-                clients = clientService.searchClientsByNom(nomFiltre);
-                request.setAttribute("nomFiltre", nomFiltre);
-                request.setAttribute("filtreApplique", true);
-            } else if (emailFiltre != null && !emailFiltre.trim().isEmpty()) {
-                Client client = clientService.findClientByEmail(emailFiltre);
-                clients = client != null ? List.of(client) : List.of();
-                request.setAttribute("emailFiltre", emailFiltre);
-                request.setAttribute("filtreApplique", true);
-            } else if (numeroClientFiltre != null && !numeroClientFiltre.trim().isEmpty()) {
-                Client client = clientService.findClientByNumeroClient(numeroClientFiltre);
-                clients = client != null ? List.of(client) : List.of();
-                request.setAttribute("numeroClientFiltre", numeroClientFiltre);
-                request.setAttribute("filtreApplique", true);
-            } else {
-                clients = clientService.getAllClients();
-                request.setAttribute("filtreApplique", false);
-            }
-            
-            request.setAttribute("clients", clients);
-            request.setAttribute("totalClients", clients.size());
-            
-            request.getRequestDispatcher("/client/client-list.jsp").forward(request, response);
-            
-        } catch (Exception e) {
-            System.err.println("Erreur lors du filtrage des clients : " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("error", "Erreur lors du filtrage des clients");
-            request.getRequestDispatcher("/client/client-list.jsp").forward(request, response);
+            request.setAttribute("pageTitle", "Liste des clients");
+            request.setAttribute("contentPage", "/client/client-list-content.jsp");
+            request.getRequestDispatcher("/includes/layout.jsp").forward(request, response);
         }
     }
 }

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * Contrôleur pour le dashboard principal
  * Affiche les statistiques globales de l'application bancaire
  */
-@WebServlet({"/", "/dashboard"})
+@WebServlet({"/dashboard"})
 public class DashboardController extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(DashboardController.class.getName());
@@ -144,7 +144,7 @@ public class DashboardController extends HttpServlet {
             
             // Configuration du layout
             request.setAttribute("pageTitle", "Dashboard - Vue d'ensemble");
-            // request.setAttribute("contentPage", "/dashboard-content.jsp");
+             request.setAttribute("contentPage", "/dashboard-content.jsp");
             
             LOGGER.info("Dashboard chargé avec succès - " + nombreClients + " clients, " + nombreComptesCourants + " comptes");
             
