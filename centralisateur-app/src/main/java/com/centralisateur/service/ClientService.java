@@ -11,6 +11,7 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import java.util.List;
 
 import java.time.LocalDateTime;
 
@@ -143,7 +144,7 @@ public class ClientService {
      * 
      * @return Liste de tous les clients
      */
-    public java.util.List<Client> getAllClients() {
+    public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
 
@@ -153,7 +154,7 @@ public class ClientService {
      * @param nom Le nom à rechercher
      * @return Liste des clients trouvés
      */
-    public java.util.List<Client> searchClientsByNom(String nom) {
+    public List<Client> searchClientsByNom(String nom) {
         if (nom == null || nom.trim().isEmpty()) {
             return getAllClients();
         }

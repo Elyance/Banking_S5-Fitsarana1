@@ -470,6 +470,14 @@ public class ComptePretService implements ComptePretServiceRemote {
             dtos.add(dto);
         }
 
+        System.out.println("DEBUG: Récupérés " + dtos.size() + " comptes prêts avec types et statuts");
+
         return dtos;
+    }
+
+    // Compte pret actif par client
+    @Override
+    public long countActiveComptesPretByClientId(Long clientId) {
+        return comptePretRepository.countActiveByClientId(clientId);
     }
 }

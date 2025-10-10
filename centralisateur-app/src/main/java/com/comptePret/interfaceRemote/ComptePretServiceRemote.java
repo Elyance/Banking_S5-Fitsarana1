@@ -145,4 +145,7 @@ public interface ComptePretServiceRemote {
     List<ComptePretStatutDTO> getAllComptePretWithTypeAndStatut();
 
     List<TypePaiementDTO> getAllTypesPaiement();
+
+    long countActiveComptesPretByClientId(Long clientId);
+
 }

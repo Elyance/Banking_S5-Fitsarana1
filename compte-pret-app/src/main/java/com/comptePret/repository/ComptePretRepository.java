@@ -117,6 +117,18 @@ public class ComptePretRepository {
         return query.getSingleResult();
     }
 
+    // Compte le nombre de comptes prets actif d'un client
+    public long countActiveByClientId(Long clientId) {
+        TypedQuery<Long> query = em.createQuery(
+            "SELECT COUNT(cp) FROM ComptePret cp JOIN cp.mouvementsStatut ms "
+            + "WHERE cp.clientId = :clientId AND ms.statutComptePret.id = 1 "
+            + "AND ms.id IN (SELECT MAX(ms2.id) FROM MvtStatutComptePret ms2 WHERE ms2.comptePret = cp GROUP BY ms2.comptePret)", 
+            Long.class
+        );
+        query.setParameter("clientId", clientId);
+        return query.getSingleResult();
+    }
+
     /**
      * Récupère tous les comptes prêts avec leurs types de paiement et dernier statut via JOIN
      */

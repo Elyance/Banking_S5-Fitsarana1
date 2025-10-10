@@ -2,6 +2,7 @@ package com.centralisateur.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * DTO pour l'affichage des comptes prêt avec les informations client
@@ -124,5 +125,31 @@ public class ComptePretAffichageDTO {
 
     public void setSoldeRestantDu(BigDecimal soldeRestantDu) {
         this.soldeRestantDu = soldeRestantDu;
+    }
+
+    public String getDateDebutFormatee() {
+        if (dateDebut != null) {
+            return dateDebut.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        }
+        return "";
+    }
+
+    @Override
+    public String toString() {
+        return "ComptePretAffichageDTO{" +
+                "compteId=" + compteId +
+                ", numeroCompte='" + numeroCompte + '\'' +
+                ", clientId=" + clientId +
+                ", nomClient='" + nomClient + '\'' +
+                ", prenomClient='" + prenomClient + '\'' +
+                ", emailClient='" + emailClient + '\'' +
+                ", montantEmprunte=" + montantEmprunte +
+                ", tauxInteret=" + tauxInteret +
+                ", dureeEnMois=" + dureeEnMois +
+                ", typePaiement='" + typePaiement + '\'' +
+                ", statutCompte='" + statutCompte + '\'' +
+                ", dateDebut=" + dateDebut +
+                ", soldeRestantDu=" + soldeRestantDu +
+                '}';
     }
 }

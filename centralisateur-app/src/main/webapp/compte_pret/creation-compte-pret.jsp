@@ -339,7 +339,7 @@
                         <input type="number" class="form-control" id="montantEmprunte" name="montantEmprunte" 
                                min="1000" max="1000000" step="100" required 
                                placeholder="Ex: 50000">
-                        <div class="form-help">Montant entre 1 000€ et 1 000 000€</div>
+                        <div class="form-help">Montant entre 1 0000 Ariary et 10 000 000 Ariary</div>
                     </div>
 
                     <div class="form-group">
@@ -356,14 +356,14 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label required" for="dureeAnnees">
+                        <label class="form-label required" for="dureeMois">
                             <i class="fas fa-calendar-alt"></i>
-                            Durée (années)
+                            Durée (en mois)
                         </label>
-                        <input type="number" class="form-control" id="dureeAnnees" name="dureeAnnees" 
-                               min="1" max="35" required 
+                        <input type="number" class="form-control" id="dureeMois" name="dureeMois" 
+                               min="1" max="420" required 
                                placeholder="Ex: 20">
-                        <div class="form-help">Durée entre 1 et 35 ans</div>
+                        <div class="form-help">Durée entre 1 et 420 mois</div>
                     </div>
 
                     <div class="form-group">
@@ -385,28 +385,6 @@
                             %>
                         </select>
                         <div class="form-help">Mode de remboursement du prêt</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Calculs automatiques -->
-            <div class="info-card">
-                <h6>
-                    <i class="fas fa-calculator"></i>
-                    Calculs Prévisionnels
-                </h6>
-                <div class="info-card-content">
-                    <div class="info-item">
-                        <div class="info-item-value" id="mensualiteCalculee">--</div>
-                        <div class="info-item-label">Mensualité</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-item-value" id="coutTotalCalcule">--</div>
-                        <div class="info-item-label">Coût Total</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-item-value" id="interetsCalcules">--</div>
-                        <div class="info-item-label">Intérêts</div>
                     </div>
                 </div>
             </div>
@@ -437,37 +415,6 @@
         } else {
             numeroCompteInput.value = '';
         }
-    });
-
-    // Calcul automatique des mensualités
-    function calculerMensualite() {
-        const montant = parseFloat(document.getElementById('montantEmprunte').value) || 0;
-        const taux = parseFloat(document.getElementById('tauxInteret').value) || 0;
-        const duree = parseInt(document.getElementById('dureeAnnees').value) || 0;
-
-        if (montant > 0 && taux > 0 && duree > 0) {
-            const tauxMensuel = taux / 100 / 12;
-            const nbMensualites = duree * 12;
-            
-            const mensualite = montant * (tauxMensuel * Math.pow(1 + tauxMensuel, nbMensualites)) / 
-                             (Math.pow(1 + tauxMensuel, nbMensualites) - 1);
-            
-            const coutTotal = mensualite * nbMensualites;
-            const interets = coutTotal - montant;
-
-            document.getElementById('mensualiteCalculee').textContent = mensualite.toFixed(2) + '€';
-            document.getElementById('coutTotalCalcule').textContent = coutTotal.toFixed(2) + '€';
-            document.getElementById('interetsCalcules').textContent = interets.toFixed(2) + '€';
-        } else {
-            document.getElementById('mensualiteCalculee').textContent = '--';
-            document.getElementById('coutTotalCalcule').textContent = '--';
-            document.getElementById('interetsCalcules').textContent = '--';
-        }
-    }
-
-    // Écouteurs pour les calculs automatiques
-    ['montantEmprunte', 'tauxInteret', 'dureeAnnees'].forEach(id => {
-        document.getElementById(id).addEventListener('input', calculerMensualite);
     });
 </script>
        

@@ -250,16 +250,6 @@
         </c:if>
     </div>
     
-    <div class="next-steps">
-        <h4><i class="fas fa-list-check"></i> Prochaines étapes</h4>
-        <ul>
-            <li>Le dossier de prêt va être examiné par nos services</li>
-            <li>Vous recevrez un email de confirmation dans les 24h</li>
-            <li>Les fonds seront disponibles après validation</li>
-            <li>Vous pouvez consulter le statut dans votre espace client</li>
-        </ul>
-    </div>
-    
     <div class="actions">
         <a href="${pageContext.request.contextPath}/compte-pret/details?id=${compteId}" class="btn btn-primary">
             <i class="fas fa-eye"></i> Voir les détails

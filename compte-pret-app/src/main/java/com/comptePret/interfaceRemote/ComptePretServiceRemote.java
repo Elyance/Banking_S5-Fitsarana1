@@ -147,4 +147,9 @@ public interface ComptePretServiceRemote {
      * Récupère tous les comptes prêts avec leurs types de paiement et statuts via JOIN
      */
     List<ComptePretStatutDTO> getAllComptePretWithTypeAndStatut();
+
+    /**
+     * Compte le nombre de comptes prêts actifs d'un client
+     */
+    long countActiveComptesPretByClientId(Long clientId);
 }

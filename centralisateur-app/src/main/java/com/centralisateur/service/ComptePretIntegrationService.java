@@ -88,4 +88,26 @@ public class ComptePretIntegrationService {
             throw new RuntimeException("Erreur lors de la récupération du statut du compte prêt: " + e.getMessage(), e);
         }
     }
+
+    /**
+     * Compte le nombre de comptes prêt d'un client
+     */
+    public long getNombreComptesPretClient(Long clientId) {
+        try {
+            return comptePretService.getNombreComptesPretClient(clientId);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors du comptage des comptes prêt du client: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Compte le nombre de comptes prêt actifs d'un client
+     */
+    public long getNombreComptesPretActifsClient(Long clientId) {
+        try {
+            return comptePretService.countActiveComptesPretByClientId(clientId);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors du comptage des comptes prêt actifs du client: " + e.getMessage(), e);
+        }
+    }
 }

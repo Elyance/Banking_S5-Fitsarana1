@@ -93,12 +93,12 @@ public class CreationComptePretController extends HttpServlet {
             String numeroCompte = request.getParameter("numeroCompte");
             BigDecimal montantEmprunte = new BigDecimal(request.getParameter("montantEmprunte"));
             BigDecimal tauxInteret = new BigDecimal(request.getParameter("tauxInteret"));
-            Integer dureeTotaleMois = Integer.parseInt(request.getParameter("dureeTotaleMois"));
-            LocalDate dateDebut = LocalDate.parse(request.getParameter("dateDebut"));
+            Integer dureeMois = Integer.parseInt(request.getParameter("dureeMois"));
             Long typePaiementId = Long.parseLong(request.getParameter("typePaiementId"));
+            LocalDate dateDebut = LocalDate.now();
 
             LOGGER.info(String.format("Création de compte prêt - Client: %d, Montant: %s, Durée: %d mois",
-                    clientId, montantEmprunte, dureeTotaleMois));
+                    clientId, montantEmprunte, dureeMois));
 
             // Validations métier
             StringBuilder errors = new StringBuilder();
@@ -115,18 +115,18 @@ public class CreationComptePretController extends HttpServlet {
                 errors.append("Le taux d'intérêt doit être entre 0% et 50%. ");
             }
 
-            if (dureeTotaleMois < 6 || dureeTotaleMois > 360) {
-                errors.append("La durée doit être entre 6 et 360 mois. ");
-            }
-
-            if (dateDebut.isBefore(LocalDate.now())) {
-                errors.append("La date de début ne peut pas être dans le passé. ");
-            }
-
             // Vérifier que le client existe
             Client client = clientService.getClientById(clientId);
             if (client == null) {
                 errors.append("Client introuvable. ");
+            } else if (clientService.getStatutActuelClient(clientId).getId() != 1) {
+                errors.append("Le client n'est pas actif. ");
+            } else {
+                // Vérifier le nombre de comptes prêt du client
+                long nombreComptes = comptePretService.getNombreComptesPretActifsClient(clientId);
+                if (nombreComptes >= 1) {
+                    errors.append("Le client a déjà un compte prêt actif. ");
+                }
             }
 
             // Si des erreurs, retourner au formulaire
@@ -136,7 +136,7 @@ public class CreationComptePretController extends HttpServlet {
                 request.setAttribute("numeroCompte", numeroCompte);
                 request.setAttribute("montantEmprunte", montantEmprunte);
                 request.setAttribute("tauxInteret", tauxInteret);
-                request.setAttribute("dureeTotaleMois", dureeTotaleMois);
+                request.setAttribute("dureeMois", dureeMois);
                 request.setAttribute("dateDebut", dateDebut);
                 request.setAttribute("typePaiementId", typePaiementId);
                 doGet(request, response);
@@ -145,16 +145,8 @@ public class CreationComptePretController extends HttpServlet {
 
             // Créer le compte prêt
             ComptePret comptePret = new ComptePret();
-            comptePret.setNumeroCompte(numeroCompte);
-            comptePret.setClientId(clientId);
-            comptePret.setMontantEmprunte(montantEmprunte);
-            comptePret.setTauxInteret(tauxInteret);
-            comptePret.setDureeTotaleMois(dureeTotaleMois);
-            comptePret.setDateDebut(dateDebut);
-            comptePret.setTypePaiementId(typePaiementId);   
-
             comptePret = comptePretService.creerComptePret(numeroCompte, clientId, montantEmprunte,
-                                                          tauxInteret, dureeTotaleMois, dateDebut,
+                                                          tauxInteret, dureeMois, dateDebut,
                                                           typePaiementId);
 
             if (comptePret != null) {
@@ -163,9 +155,10 @@ public class CreationComptePretController extends HttpServlet {
 
                 // Récupérer les détails du compte créé via réflexion
                 try {
-                    Long compteId = (Long) comptePret.getClass().getMethod("getId").invoke(comptePret);
-                    BigDecimal montant = (BigDecimal) comptePret.getClass().getMethod("getMontantEmprunte").invoke(comptePret);
-                    LocalDate dateCreation = (LocalDate) comptePret.getClass().getMethod("getDateDebut").invoke(comptePret);
+
+                    Long compteId = comptePret.getId();
+                    BigDecimal montant = comptePret.getMontantEmprunte();
+                    LocalDate dateCreation = comptePret.getDateDebut();
 
                     request.setAttribute("success", true);
                     request.setAttribute("message", "Compte prêt créé avec succès !");
@@ -192,7 +185,7 @@ public class CreationComptePretController extends HttpServlet {
 
         } catch (NumberFormatException e) {
             LOGGER.log(Level.WARNING, "Erreur de format dans les paramètres", e);
-            request.setAttribute("error", "Erreur dans les données saisies. Vérifiez les montants et les dates.");
+            request.setAttribute("error", "Erreur dans les données saisies. Vérifiez les montants et les dates."+ e.getMessage());
             doGet(request, response);
 
         } catch (DateTimeParseException e) {

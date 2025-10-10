@@ -98,6 +98,9 @@ public class CreationCompteCourantController extends HttpServlet {
             if (client == null) {
                 throw new IllegalArgumentException("Client introuvable avec l'ID : " + clientId);
             }
+            if (clientService.getStatutActuelClient(clientId).getId() != 1) {
+                throw new IllegalArgumentException("Le client n'est pas actif");
+            }
 
             // Découvert autorisé (optionnel)
             BigDecimal decouvertAutorise = BigDecimal.ZERO;

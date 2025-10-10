@@ -38,6 +38,7 @@ public class ListeComptePretController extends HttpServlet {
             // Récupérer tous les comptes prêt
             List<ComptePretStatutDTO> comptesPret = comptePretService.getAllComptePretWithTypeAndStatut();
             LOGGER.info("Comptes prêt récupérés: " + comptesPret.size());
+            System.out.println("Comptes prêt: " + comptesPret.size());
             
             // Créer la liste des DTO pour l'affichage
             List<ComptePretAffichageDTO> comptesAffichage = new ArrayList<>();
@@ -96,9 +97,13 @@ public class ListeComptePretController extends HttpServlet {
             
             // Ajouter les données à la requête
             request.setAttribute("comptes", comptesAffichage);
+            System.out.println("DTO pour affichage: " + comptesAffichage.size());
             request.setAttribute("nombreComptes", comptesAffichage.size());
 
             LOGGER.info("=== Envoi vers JSP: " + comptesAffichage.size() + " comptes prêt ===");
+            for (ComptePretAffichageDTO comptePretAffichageDTO : comptesAffichage) {
+                System.out.println("DTO pour affichage: " + comptePretAffichageDTO.toString());
+            }
 
             // Utiliser le layout principal pour la page de liste
             request.setAttribute("pageTitle", "Liste des Comptes Prêt");
