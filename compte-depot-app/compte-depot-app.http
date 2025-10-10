@@ -1,0 +1,6 @@
+@compte_depot_app_HostAddress = http://localhost:5197
+
+GET {{compte_depot_app_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,7 +1,6 @@
 package com.comptePret.interfaceRemote;
 
 import com.comptePret.entity.ComptePret;
-import com.comptePret.entity.Remboursement;
 import com.banque.dto.ComptePretStatutDTO;
 import com.banque.dto.TypePaiementDTO;
 import jakarta.ejb.Remote;
@@ -29,11 +28,6 @@ public interface ComptePretServiceRemote {
     boolean supprimerComptePret(Long comptePretId);
     
     /**
-     * Effectue un remboursement sur un compte prêt
-     */
-    Remboursement effectuerRemboursement(Long comptePretId, BigDecimal montant, String commentaire);
-    
-    /**
      * Calcule et retourne le solde restant dû d'un compte prêt
      */
     BigDecimal getSoldeRestantDu(Long comptePretId);
@@ -59,11 +53,6 @@ public interface ComptePretServiceRemote {
     List<ComptePret> getAllComptesPret();
     
     /**
-     * Calcule le montant total remboursé pour un compte prêt
-     */
-    BigDecimal getTotalRembourse(Long comptePretId);
-    
-    /**
      * Calcule le pourcentage remboursé pour un compte prêt
      */
     BigDecimal getPourcentageRembourse(Long comptePretId);
@@ -72,11 +61,6 @@ public interface ComptePretServiceRemote {
      * Vérifie si un compte prêt est entièrement remboursé
      */
     boolean isEntierementRembourse(Long comptePretId);
-    
-    /**
-     * Trouve tous les remboursements d'un compte prêt
-     */
-    List<Remboursement> getRemboursementsByComptePretId(Long comptePretId);
     
     /**
      * Change le statut d'un compte prêt par libellé

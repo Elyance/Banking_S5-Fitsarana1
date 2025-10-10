@@ -34,9 +34,6 @@ public class ComptePretService implements ComptePretServiceRemote {
     @Inject
     private TypePaiementRepository typePaiementRepository;
 
-    @Inject
-    private RemboursementRepository remboursementRepository;
-
     /**
      * Crée un nouveau compte prêt
      */
@@ -145,79 +142,6 @@ public class ComptePretService implements ComptePretServiceRemote {
     }
 
     /**
-     * Effectue un remboursement sur un compte prêt
-     */
-    @Transactional
-    public Remboursement effectuerRemboursement(Long comptePretId, BigDecimal montant, 
-                                            String commentaire) {
-        
-        ComptePret comptePret = comptePretRepository.findById(comptePretId);
-        if (comptePret == null) {
-            throw new IllegalArgumentException("Compte prêt introuvable");
-        }
-
-        // Vérifier que le compte est actif (ID 1)
-        if (!isComptePretActif(comptePretId)) {
-            throw new IllegalStateException("Impossible d'effectuer un remboursement sur un compte non actif");
-        }
-
-        // Vérifications des montants
-        if (montant == null) {
-            throw new IllegalArgumentException("Le montant ne peut pas être nul");
-        }
-
-        if (montant.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Le montant du remboursement ne peut pas être négatif");
-        }
-
-        if (montant.compareTo(comptePret.getSoldeRestantDu()) > 0) {
-            throw new IllegalArgumentException("Le montant du remboursement (" + montant + 
-                " €) ne peut pas dépasser le solde restant dû (" + comptePret.getSoldeRestantDu() + " €)");
-        }
-
-        BigDecimal montantCapital = calculerMensualiteSansInteret(comptePret.getMontantEmprunte(), 
-            comptePret.getTauxInteret(), comptePret.getDureeTotaleMois());
-        if (montant.compareTo(montantCapital) < 0) {
-            throw new IllegalArgumentException("Le montant du remboursement (" + montant + 
-                " €) doit être au moins égal à la mensualité convenue (" + montantCapital + " €)");
-        }
-
-        BigDecimal montantInteret = montant.subtract(montantCapital);
-
-        BigDecimal montantInteretDu = calculerInteretsDus(comptePretId, LocalDate.now());
-        
-        if (montantInteret.compareTo(montantInteretDu) < 0) {
-            throw new IllegalArgumentException("Le montant des intérêts payés est insuffisant. Intérêts dus : " + montantInteretDu);
-        }
-        if (montantInteret.compareTo(montantInteretDu) > 0) {
-            throw new IllegalArgumentException("Le montant des intérêts payés dépasse les intérêts dus. Intérêts dus : " + montantInteretDu);
-        }
-
-
-
-        // Calcul du nouveau solde
-        BigDecimal nouveauSolde = comptePret.getSoldeRestantDu().subtract(montantCapital);
-
-        // Création du remboursement
-        Remboursement remboursement = new Remboursement(comptePret, montantCapital, montantInteret, nouveauSolde);
-        remboursement.setCommentaire(commentaire);
-        
-        // Sauvegarde du remboursement
-        remboursement = remboursementRepository.save(remboursement);
-
-        // Mise à jour du solde du compte prêt
-        comptePret.setSoldeRestantDu(nouveauSolde);
-        comptePretRepository.save(comptePret);
-
-        // Si entièrement remboursé, changer le statut à FERMÉ (ID 3)
-        if (nouveauSolde.compareTo(BigDecimal.ZERO) == 0) {
-            changerStatutComptePret(comptePretId, 3L, "Prêt entièrement remboursé");
-        }
-
-        return remboursement;
-    }
-
-    /**
      * Calcule et retourne le solde restant dû d'un compte prêt
      */
     public BigDecimal getSoldeRestantDu(Long comptePretId) {
@@ -254,13 +178,6 @@ public class ComptePretService implements ComptePretServiceRemote {
     }
 
     /**
-     * Calcule le montant total remboursé pour un compte prêt
-     */
-    public BigDecimal getTotalRembourse(Long comptePretId) {
-        return remboursementRepository.getTotalRemboursePourCompte(comptePretId);
-    }
-
-    /**
      * Calcule le pourcentage remboursé pour un compte prêt
      */
     public BigDecimal getPourcentageRembourse(Long comptePretId) {
@@ -277,13 +194,6 @@ public class ComptePretService implements ComptePretServiceRemote {
     public boolean isEntierementRembourse(Long comptePretId) {
         ComptePret comptePret = comptePretRepository.findById(comptePretId);
         return comptePret != null && comptePret.isEntierementRembourse();
-    }
-
-    /**
-     * Trouve tous les remboursements d'un compte prêt
-     */
-    public List<Remboursement> getRemboursementsByComptePretId(Long comptePretId) {
-        return remboursementRepository.findByComptePretId(comptePretId);
     }
 
     /**

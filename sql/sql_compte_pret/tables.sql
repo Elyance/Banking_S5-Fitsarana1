@@ -67,23 +67,24 @@ CREATE TABLE mvt_statut_compte_pret (
 -- TABLE DES REMBOURSEMENTS (TRANSACTIONS RÉELLES)
 -- =====================================================
 
-CREATE TABLE remboursement (
+CREATE TABLE echeances (
     id BIGSERIAL PRIMARY KEY,
     compte_pret_id BIGINT NOT NULL REFERENCES compte_pret(id) ON DELETE CASCADE,
     
-    -- Informations du remboursement
-    date_remboursement TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    montant_total_paye DECIMAL(12,2) NOT NULL CHECK (montant_total_paye > 0),
+    -- Informations de l'échéance
+    date_echeance DATE NOT NULL,
     montant_capital DECIMAL(12,2) NOT NULL CHECK (montant_capital >= 0),
-    montant_interet DECIMAL(12,2) NOT NULL CHECK (montant_interet >= 0),
-    
-    -- État après remboursement
-    solde_restant_apres DECIMAL(15,2) NOT NULL CHECK (solde_restant_apres >= 0),
-    
-    -- Métadonnées
-    reference_transaction VARCHAR(100),
-    commentaire TEXT,
-    
-    -- Contrainte de cohérence
-    CHECK (montant_total_paye = montant_capital + montant_interet)
+    montant_interet DECIMAL(12,2) NOT NULL CHECK (montant_interet >= 0)
+);
+
+CREATE TABLE statut_echeance (
+    id BIGSERIAL PRIMARY KEY,
+    libelle VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE mvt_statut_echeance (
+    id BIGSERIAL PRIMARY KEY,
+    echeance_id BIGINT NOT NULL REFERENCES echeances(id) ON DELETE CASCADE,
+    statut_echeance_id BIGINT NOT NULL REFERENCES statut_echeance(id),
+    date_changement TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

@@ -28,11 +28,6 @@ public interface ComptePretServiceRemote {
     boolean supprimerComptePret(Long comptePretId);
     
     /**
-     * Effectue un remboursement sur un compte prêt
-     */
-    Object effectuerRemboursement(Long comptePretId, BigDecimal montant, String commentaire);
-    
-    /**
      * Calcule et retourne le solde restant dû d'un compte prêt
      */
     BigDecimal getSoldeRestantDu(Long comptePretId);
@@ -56,12 +51,7 @@ public interface ComptePretServiceRemote {
      * Trouve tous les comptes prêts
      */
     List<ComptePret> getAllComptesPret();
-    
-    /**
-     * Calcule le montant total remboursé pour un compte prêt
-     */
-    BigDecimal getTotalRembourse(Long comptePretId);
-    
+
     /**
      * Calcule le pourcentage remboursé pour un compte prêt
      */
@@ -71,11 +61,6 @@ public interface ComptePretServiceRemote {
      * Vérifie si un compte prêt est entièrement remboursé
      */
     boolean isEntierementRembourse(Long comptePretId);
-    
-    /**
-     * Trouve tous les remboursements d'un compte prêt
-     */
-    List<?> getRemboursementsByComptePretId(Long comptePretId);
     
     /**
      * Change le statut d'un compte prêt par libellé

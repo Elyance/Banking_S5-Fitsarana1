@@ -57,9 +57,6 @@ public class ComptePret implements Serializable {
     @OneToMany(mappedBy = "comptePret", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MvtStatutComptePret> mouvementsStatut;
 
-    @OneToMany(mappedBy = "comptePret", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Remboursement> remboursements;
-
     // Constructeurs
     public ComptePret() {
         this.dateCreation = LocalDateTime.now();
@@ -174,14 +171,6 @@ public class ComptePret implements Serializable {
 
     public void setMouvementsStatut(List<MvtStatutComptePret> mouvementsStatut) {
         this.mouvementsStatut = mouvementsStatut;
-    }
-
-    public List<Remboursement> getRemboursements() {
-        return remboursements;
-    }
-
-    public void setRemboursements(List<Remboursement> remboursements) {
-        this.remboursements = remboursements;
     }
 
     // Méthodes métier
